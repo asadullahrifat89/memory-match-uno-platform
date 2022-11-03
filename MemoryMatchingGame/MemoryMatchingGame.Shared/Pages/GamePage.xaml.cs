@@ -543,6 +543,8 @@ namespace MemoryMatchingGame
             if (_columns == 4 && _rows < 5)
                 _rows++;
 
+            SoundHelper.PlaySound(SoundType.LEVEL_UP);
+
 #if DEBUG
             Console.WriteLine($"GAME SPEED: {_gameSpeed}");
 #endif

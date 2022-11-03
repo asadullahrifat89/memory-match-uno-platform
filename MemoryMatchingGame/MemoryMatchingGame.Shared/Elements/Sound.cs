@@ -69,5 +69,6 @@
         TILE_FLIP,
         CORRECT_MATCH,
         INCORRECT_MATCH,
+        LEVEL_UP,
     }
 }
