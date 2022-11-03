@@ -60,7 +60,7 @@ namespace MemoryMatchingGame
         private int _columns = 2;
         private int _memoryTilePairsCount;
 
-        private ObservableCollection<MemoryTile> _createdMemoryTiles = new ObservableCollection<MemoryTile>();
+        private ObservableCollection<MemoryTile> _createdMemoryTiles = new();
 
         private (string Id, int Number) _selectedTile1 = new(null, -1);
         private (string Id, int Number) _selectedTile2 = new(null, -1);
