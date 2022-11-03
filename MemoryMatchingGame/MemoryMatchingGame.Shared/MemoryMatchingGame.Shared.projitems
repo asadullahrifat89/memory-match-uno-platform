@@ -19,7 +19,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Elements\Card.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Elements\MemoryTile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\GameEnvironment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\Sound.cs" />
@@ -89,6 +89,7 @@
 		 without manipulating the projitem file.
 	-->
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card1.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card16.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card2.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card3.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card4.png" />

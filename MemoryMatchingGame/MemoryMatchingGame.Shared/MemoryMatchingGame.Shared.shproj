@@ -15,7 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <_Globbed_Compile Remove="Constants.cs" />
-    <_Globbed_Compile Remove="Elements\Card.cs" />
     <_Globbed_Compile Remove="Elements\GameEnvironment.cs" />
     <_Globbed_Compile Remove="Elements\GameObject.cs" />
     <_Globbed_Compile Remove="Elements\Sound.cs" />

@@ -310,7 +310,7 @@ namespace MemoryMatchingGame
 
         private void LoadGameElements()
         {
-            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.CARD).Select(x => x.Value).ToArray();
+            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
         }
 
         private void PopulateUnderView()
@@ -337,7 +337,7 @@ namespace MemoryMatchingGame
             {
                 switch ((ElementType)x.Tag)
                 {
-                    case ElementType.CARD:
+                    case ElementType.MEMORYTILE:
                         {
                             RecyleCard(x);
                         }
@@ -369,7 +369,7 @@ namespace MemoryMatchingGame
             {
                 switch ((ElementType)x.Tag)
                 {
-                    case ElementType.CARD:
+                    case ElementType.MEMORYTILE:
                         {
                             UpdateCard(x);
                         }
@@ -391,7 +391,7 @@ namespace MemoryMatchingGame
 
         private void SpawnCard()
         {
-            Card Card = new(_scale);
+            MemoryTile Card = new(_scale);
             RandomizeCardPosition(Card);
 
             UnderView.Children.Add(Card);

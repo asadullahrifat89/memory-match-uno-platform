@@ -5,19 +5,25 @@ using System.Text;
 
 namespace MemoryMatchingGame
 {
-    public class Card : GameObject
+    public class MemoryTile : GameObject
     {
         #region Ctor
 
-        public Card(double scale)
+        public MemoryTile(double scale)
         {
-            Tag = ElementType.CARD;
+            Tag = ElementType.MEMORYTILE;
 
             Height = Constants.CARD_SIZE * scale;
             Width = Constants.CARD_SIZE * scale;
 
             Style = App.Current.Resources["CardStyle"] as Style;
         }
+
+        #endregion
+
+        #region Properties
+
+        public int Id { get; set; }
 
         #endregion
     }

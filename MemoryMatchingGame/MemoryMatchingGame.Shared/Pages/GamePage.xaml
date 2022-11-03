@@ -10,58 +10,53 @@
 
     <Grid x:Name="RootGrid">
 
+        <!--#region Player health-->
         <Border
-            MinWidth="300"
+            x:Name="PlayerHealthBarPanel"
             MaxWidth="1000"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            Margin="5"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            CornerRadius="5"
             Style="{StaticResource CardStyle}">
 
-            <StackPanel>
+            <StackPanel
+                Margin="5,0,5,0"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
 
-                <!--  Remaining time  -->
-                <Border
-                    x:Name="PlayerHealthBarPanel"
-                    Margin="5"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Top"
-                    BorderBrush="#8bc221"
-                    BorderThickness="3"
-                    CornerRadius="5"
-                    Style="{StaticResource GameUIContainer}">
+                <!--  Time  -->
+                <Image
+                    Width="50"
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Source="ms-appx:///Assets/Images/clock.png" />
 
-                    <StackPanel
-                        Margin="5,0,5,0"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-
-                        <!--  Time  -->
-                        <Image
-                            Width="50"
-                            Height="50"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Source="ms-appx:///Assets/Images/clock.png" />
-
-                        <!--  Time bar  -->
-                        <ProgressBar
-                            x:Name="PlayerHealthBar"
-                            Height="10"
-                            Margin="5,0"
-                            VerticalAlignment="Center"
-                            Foreground="Crimson"
-                            Maximum="100"
-                            Minimum="0"
-                            Value="100" />
-
-                    </StackPanel>
-                </Border>
+                <!--  Time bar  -->
+                <ProgressBar
+                    x:Name="PlayerHealthBar"
+                    Height="10"
+                    Margin="5,0"
+                    VerticalAlignment="Center"
+                    Foreground="Green"
+                    Maximum="100"
+                    Minimum="0"
+                    Value="100" />
 
             </StackPanel>
 
         </Border>
+        <!--#endregion-->
 
-        <!--#region Player health, game Score-->
+        <WrapPanel
+            x:Name="TilePanel"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            ItemHeight="80"
+            ItemWidth="80" />
+
+        <!--#region Game score-->
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"

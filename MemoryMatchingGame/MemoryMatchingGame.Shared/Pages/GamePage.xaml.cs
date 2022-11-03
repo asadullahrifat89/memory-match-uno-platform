@@ -1,14 +1,15 @@
-﻿using Microsoft.UI.Input;
+﻿using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Windows.Foundation;
 using Windows.System;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace MemoryMatchingGame
 {
@@ -50,6 +51,7 @@ namespace MemoryMatchingGame
         private double _difficultyMultiplier;
 
         private double _playerHealth;
+        private readonly double _playerHealthDefault = 100;
 
         private int _collectibleCollected;
 
@@ -59,6 +61,12 @@ namespace MemoryMatchingGame
 
         private readonly double _healthDepletePointDefault = 0.5;
         private readonly double _healthGainPointDefault = 10;
+
+        private int _rows = 2;
+        private int _columns = 2;
+        private int _tileSetCount;
+
+        private ObservableCollection<MemoryTile> _memoryTiles = new ObservableCollection<MemoryTile>();
 
         #endregion
 
@@ -102,7 +110,7 @@ namespace MemoryMatchingGame
 
         private void LoadGameElements()
         {
-            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.CARD).Select(x => x.Value).ToArray();
+            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
             _powerUps = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.POWERUP).Select(x => x.Value).ToArray();
         }
 
@@ -118,6 +126,16 @@ namespace MemoryMatchingGame
         private void PopulateGameView()
         {
             //TODO: add cards to container
+
+            _rows = 2;
+            _columns = 2;
+
+            _tileSetCount = (_rows * _columns) / 2;
+
+            _memoryTiles.Clear();
+
+
+
         }
 
         private void StartGame()
@@ -144,9 +162,10 @@ namespace MemoryMatchingGame
             ScoreText.Text = "0";
 
             _playerHealthDepletionPoint = _healthDepletePointDefault;
-            _playerHealth = 100;
+            _playerHealth = _playerHealthDefault;
             _playerHealthRejuvenationPoint = _healthGainPointDefault;
             _playerHealthDepletionCounter = 10;
+            PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
 
             StartGameSounds();
 
@@ -252,6 +271,19 @@ namespace MemoryMatchingGame
                 _playerHealthDepletionCounter = 10;
             }
 
+            if (_playerHealth < _playerHealthDefault / 3)
+            {
+                PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Crimson);
+            }
+            else if (_playerHealth < _playerHealthDefault / 2)
+            {
+                PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Orange);
+            }
+            else if (_playerHealth > _playerHealthDefault / 2)
+            {
+                PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
+            }
+
             if (_playerHealth <= 0)
                 GameOver();
         }
@@ -282,6 +314,14 @@ namespace MemoryMatchingGame
 
                 _difficultyMultiplier++;
                 _scoreCap += 50;
+
+                // increase columns up to 4
+                if (_columns < 4)
+                    _columns++;
+
+                // increase rows upto 5
+                if (_columns == 4 && _rows < 5)
+                    _rows++;
 
 #if DEBUG
                 Console.WriteLine($"GAME SPEED: {_gameSpeed}");

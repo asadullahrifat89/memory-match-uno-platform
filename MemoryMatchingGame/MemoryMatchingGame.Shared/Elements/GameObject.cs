@@ -132,7 +132,7 @@ namespace MemoryMatchingGame
     public enum ElementType
     {
         NONE,
-        CARD,
+        MEMORYTILE,
         POWERUP,
     }
 }
