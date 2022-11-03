@@ -261,10 +261,11 @@ namespace MemoryMatchingGame
             _collectibleCollected = 0;
             ScoreText.Text = "0";
 
-            _playerHealthDepletionPoint = _healthDepletePointDefault;
             _playerHealth = _playerHealthDefault;
+            _playerHealthDepletionPoint = _healthDepletePointDefault;
             _playerHealthRejuvenationPoint = _healthGainPointDefault;
             _playerHealthDepletionCounter = 10;
+
             PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
 
             StartGameSounds();
@@ -296,9 +297,9 @@ namespace MemoryMatchingGame
             RemoveGameObjects();
 
             // once all the tiles are matched move to next level and start game
-            if (GameView.GetGameObjects<GameObject>().Count() == 0)
+            if (GameView.GetGameObjects<MemoryTile>().Count() == 0)
             {
-                ScaleDifficulty();
+                LevelUp();
                 SpawnMemoryTiles();
             }
 
@@ -366,11 +367,6 @@ namespace MemoryMatchingGame
                     case ElementType.MEMORYTILE:
                         {
                             UpdateMemoryTile(x as MemoryTile);
-                        }
-                        break;
-                    case ElementType.POWERUP:
-                        {
-
                         }
                         break;
                     default:
@@ -529,8 +525,9 @@ namespace MemoryMatchingGame
 
         #region Difficulty
 
-        private void ScaleDifficulty()
+        private void LevelUp()
         {
+            _playerHealth = _playerHealthDefault;
 
             _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.1 * _difficultyMultiplier;
             _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
