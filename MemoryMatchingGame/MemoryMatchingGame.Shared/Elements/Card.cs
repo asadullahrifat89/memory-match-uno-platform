@@ -21,4 +21,10 @@ namespace MemoryMatchingGame
 
         #endregion
     }
+
+    public enum PowerUpType
+    {
+        TimeLapse,
+        ScoreMultiplier,
+    }
 }
