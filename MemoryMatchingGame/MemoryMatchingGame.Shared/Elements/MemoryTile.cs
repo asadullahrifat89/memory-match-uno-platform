@@ -58,6 +58,7 @@ namespace MemoryMatchingGame
         {
             _hasMatched = true;
             _matchTileCounter = _matchTileCounterDefault;
+            _hiddenObject.Opacity = 1;
         }
 
         public void RevealTile()
