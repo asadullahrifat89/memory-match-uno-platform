@@ -11,7 +11,7 @@ namespace MemoryMatchingGame
         private GameObject _hiddenObject;
 
         private int _revealTileCounter;
-        private readonly int _revealTileCounterDefault = 200;
+        private readonly int _revealTileCounterDefault = 100;
 
         private int _matchTileCounter;
         private readonly int _matchTileCounterDefault = 50;
@@ -33,15 +33,16 @@ namespace MemoryMatchingGame
             Style = App.Current.Resources["CardStyle"] as Style;
 
             _hiddenObject = new GameObject() { Height = Height, Width = Width };
-
-            _hiddenObject.SetScaleTransform(0);
+            _hiddenObject.Opacity = 0;
         }
 
         #endregion
 
         #region Properties
 
-        public int Id { get; set; }
+        public string Id { get; set; }
+
+        public int TileNumber { get; set; } = 0;
 
         #endregion
 
@@ -50,6 +51,7 @@ namespace MemoryMatchingGame
         public void SetTileContent(Uri uri)
         {
             _hiddenObject.SetContent(uri);
+            Child = _hiddenObject;
         }
 
         public void MatchTile()
@@ -70,9 +72,9 @@ namespace MemoryMatchingGame
             {
                 _matchTileCounter--;
 
-                // once matched shrink the tile
-                if (_matchTileCounter <= 0 && !HasShrinked)
-                    Shrink();
+                // once matched fade the tile
+                if (_matchTileCounter <= 0 && !HasFaded)
+                    Fade();
             }
             else
             {
@@ -89,8 +91,8 @@ namespace MemoryMatchingGame
                 }
                 else
                 {
-                    if (!_hiddenObject.HasShrinked)
-                        _hiddenObject.Shrink();
+                    if (!_hiddenObject.HasFaded)
+                        _hiddenObject.Fade();
                 }
             }
         }

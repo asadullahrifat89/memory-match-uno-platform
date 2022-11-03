@@ -62,8 +62,8 @@ namespace MemoryMatchingGame
 
         private ObservableCollection<MemoryTile> _createdMemoryTiles = new ObservableCollection<MemoryTile>();
 
-        private MemoryTile _selectedTile1;
-        private MemoryTile _selectedTile2;
+        private string _selectedTile1Id;
+        private string _selectedTile2Id;
 
         #endregion
 
@@ -130,27 +130,49 @@ namespace MemoryMatchingGame
 
         private void MemoryTile_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            MemoryTile memoryTile = sender as MemoryTile;
+            MemoryTile tile = sender as MemoryTile;
 
-            if (_selectedTile1 == null)
+            if (_selectedTile1Id.IsNullOrBlank())
             {
-                _selectedTile1 = memoryTile;
+                _selectedTile1Id = tile.Id;
+                tile.RevealTile();
+#if DEBUG
+                Console.WriteLine($"TILE1 ID: {_selectedTile1Id} NUMBER: {tile.TileNumber}");
+#endif
             }
-            else if (_selectedTile2 == null)
+            else if (!_selectedTile1Id.IsNullOrBlank())
             {
-                _selectedTile2 = memoryTile;
+                _selectedTile2Id = tile.Id;
+                tile.RevealTile();
+#if DEBUG
+                Console.WriteLine($"TILE2 ID: {_selectedTile2Id} NUMBER: {tile.TileNumber}");
+#endif
             }
 
-            memoryTile.RevealTile();
-
-            if (_selectedTile1.Id == _selectedTile2.Id)
+            if (!_selectedTile1Id.IsNullOrBlank() && !_selectedTile2Id.IsNullOrBlank())
             {
-                _selectedTile1.MatchTile();
-                _selectedTile2.MatchTile();
+                var tile1 = GameView.GetGameObjects<MemoryTile>().First(x => x.Id == _selectedTile1Id);
+                var tile2 = GameView.GetGameObjects<MemoryTile>().First(x => x.Id == _selectedTile2Id);
 
-                SoundHelper.PlaySound(SoundType.CORRECT_MATCH);
+                if (tile1.Id == tile2.Id && tile1.TileNumber != tile2.TileNumber)
+                {
+                    AddScore(5);
+                    SoundHelper.PlaySound(SoundType.CORRECT_MATCH);
 
-                AddScore(5);
+                    tile1.MatchTile();
+                    tile2.MatchTile();
+
+#if DEBUG
+                    Console.WriteLine("TILES MATCH");
+#endif
+                }
+                else
+                {
+                    SoundHelper.PlaySound(SoundType.INCORRECT_MATCH);
+                }
+
+                _selectedTile1Id = null;
+                _selectedTile2Id = null;
             }
             else
             {
@@ -204,71 +226,8 @@ namespace MemoryMatchingGame
 
         private void PopulateGameView()
         {
-            //TODO: add cards to container
-
             _rows = 2;
             _columns = 4;
-        }
-
-        private void SetMemoryTiles()
-        {
-            GameView.Children.Clear();
-
-            int tileNum = 0;
-
-            for (int i = 0; i < _rows; i++)
-            {
-                for (int j = 0; j < _columns; j++)
-                {
-                    MemoryTile memoryTile = _createdMemoryTiles[tileNum];
-
-                    memoryTile.SetTop((memoryTile.Height + 5) * i);
-                    memoryTile.SetLeft((memoryTile.Width + 5) * j);
-
-                    memoryTile.PointerPressed += MemoryTile_PointerPressed;
-
-                    GameView.Children.Add(memoryTile);
-
-                    tileNum++;
-                }
-            }
-        }
-
-        private void CreateMemoryTiles()
-        {
-            _memoryTilePairsCount = (_rows * _columns) / 2;
-
-            _createdMemoryTiles.Clear();
-
-            var _tileStart = _random.Next(0, _memoryTiles.Length / 2);
-
-            for (int i = 0; i < _memoryTilePairsCount; i++)
-            {
-                _markNum = _tileStart + i;
-
-                var memoryTile = new MemoryTile(_scale) { Id = i };
-                memoryTile.SetTileContent(_memoryTiles[_markNum]);
-
-                var memoryTileMatch = new MemoryTile(_scale) { Id = i };
-                memoryTileMatch.SetTileContent(_memoryTiles[_markNum]);
-
-                _createdMemoryTiles.Add(memoryTile);
-                _createdMemoryTiles.Add(memoryTileMatch);
-            }
-
-#if DEBUG
-            Console.WriteLine(_createdMemoryTiles);
-#endif
-        }
-
-        private void ShuffleMemoryTiles()
-        {
-            //Shuffle memory tiles
-            for (int i = 0; i < 64; i++)
-            {
-                _createdMemoryTiles.Reverse();
-                _createdMemoryTiles.Move(_random.Next(0, _createdMemoryTiles.Count), _random.Next(0, _createdMemoryTiles.Count));
-            }
         }
 
         private void StartGame()
@@ -463,6 +422,9 @@ namespace MemoryMatchingGame
 
         private void SpawnMemoryTiles()
         {
+            _selectedTile1Id = null;
+            _selectedTile2Id = null;
+
             CreateMemoryTiles();
             ShuffleMemoryTiles();
             SetMemoryTiles();
@@ -473,8 +435,73 @@ namespace MemoryMatchingGame
         {
             memoryTile.AnimateTile();
 
-            if (memoryTile.HasShrinked)
+            if (memoryTile.HasFaded)
                 GameView.AddDestroyableGameObject(memoryTile);
+        }
+
+        private void SetMemoryTiles()
+        {
+            GameView.Children.Clear();
+
+            int tileNum = 0;
+
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    MemoryTile memoryTile = _createdMemoryTiles[tileNum];
+
+                    memoryTile.TileNumber = tileNum;
+
+                    memoryTile.SetTop((memoryTile.Height + 5) * i);
+                    memoryTile.SetLeft((memoryTile.Width + 5) * j);
+
+                    memoryTile.PointerPressed += MemoryTile_PointerPressed;
+
+                    GameView.Children.Add(memoryTile);
+
+                    tileNum++;
+                }
+            }
+        }
+
+        private void CreateMemoryTiles()
+        {
+            _memoryTilePairsCount = (_rows * _columns) / 2;
+
+            _createdMemoryTiles.Clear();
+
+            var _tileStart = _random.Next(0, _memoryTiles.Length / 2);
+
+            for (int i = 0; i < _memoryTilePairsCount; i++)
+            {
+                _markNum = _tileStart + i;
+
+                var id = Guid.NewGuid().ToString();
+
+                var memoryTile = new MemoryTile(_scale) { Id = id };
+                memoryTile.SetTileContent(_memoryTiles[_markNum]);
+
+                var memoryTileMatch = new MemoryTile(_scale) { Id = id };
+                memoryTileMatch.SetTileContent(_memoryTiles[_markNum]);
+
+                _createdMemoryTiles.Add(memoryTile);
+                _createdMemoryTiles.Add(memoryTileMatch);
+            }
+
+#if DEBUG
+            Console.WriteLine(_createdMemoryTiles);
+#endif
+        }
+
+        private void ShuffleMemoryTiles()
+        {
+            //Shuffle memory tiles
+            for (int i = 0; i < 64; i++)
+            {
+                _createdMemoryTiles.Reverse();
+                _createdMemoryTiles.Move(_random.Next(0, _createdMemoryTiles.Count), _random.Next(0, _createdMemoryTiles.Count));
+            }
         }
 
         #endregion

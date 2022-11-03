@@ -12,24 +12,13 @@ namespace MemoryMatchingGame
 
         private readonly Image _content = new() { Stretch = Stretch.Uniform, Visibility = Microsoft.UI.Xaml.Visibility.Collapsed };
 
-        private readonly CompositeTransform _compositeTransform = new()
-        {
-            CenterX = 0.5,
-            CenterY = 0.5,
-            Rotation = 0,
-            ScaleX = 1,
-            ScaleY = 1,
-        };
-
         #endregion
 
         #region Properties
 
-        public bool IsFlaggedForShrinking { get; set; }
+        public bool HasFaded => Opacity <= 0;
 
-        public bool HasShrinked => _compositeTransform.ScaleX <= 0;
-
-        public bool HasAppeared { get; set; } = false;
+        public bool HasAppeared => Opacity >= 1;
 
         #endregion
 
@@ -39,9 +28,6 @@ namespace MemoryMatchingGame
         {
             Child = _content;
             CanDrag = false;
-
-            RenderTransformOrigin = new Point(0.5, 0.5);
-            RenderTransform = _compositeTransform;
         }
 
         #endregion        
@@ -96,34 +82,14 @@ namespace MemoryMatchingGame
             _content.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
         }
 
-        public void SetScaleTransform(double scaleTransform)
+        public void Fade()
         {
-            _compositeTransform.ScaleX = scaleTransform;
-            _compositeTransform.ScaleY = scaleTransform;
-        }
-
-        public void SetScaleX(double scaleX)
-        {
-            _compositeTransform.ScaleX = scaleX;
-        }
-
-        public void Shrink()
-        {
-            _compositeTransform.ScaleX -= 0.1;
-            _compositeTransform.ScaleY -= 0.1;
+            Opacity -= 0.1;
         }
 
         public void Appear()
         {
-            if (_compositeTransform.ScaleX >= 1)
-            {
-                HasAppeared = true;
-            }
-            else
-            {
-                _compositeTransform.ScaleX += 0.1;
-                _compositeTransform.ScaleY += 0.1;
-            }
+            Opacity += 0.1;
         }
 
         #endregion
