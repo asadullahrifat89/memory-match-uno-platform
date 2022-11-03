@@ -67,6 +67,7 @@ namespace MemoryMatchingGame
             new KeyValuePair<SoundType, string>(SoundType.INCORRECT_MATCH, "Assets/Sounds/incorrect_match.mp3"),
 
             new KeyValuePair<SoundType, string>(SoundType.LEVEL_UP, "Assets/Sounds/level_up.mp3"),
+            new KeyValuePair<SoundType, string>(SoundType.SELECTION_BARRED, "Assets/Sounds/selection_barred.mp3"),
         };
 
         #endregion

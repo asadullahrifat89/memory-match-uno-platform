@@ -70,5 +70,6 @@
         CORRECT_MATCH,
         INCORRECT_MATCH,
         LEVEL_UP,
+        SELECTION_BARRED,
     }
 }

@@ -20,9 +20,6 @@ namespace MemoryMatchingGame
         private int _matchTileCounter;
         private readonly int _matchTileCounterDefault = 50;
 
-        private bool _isRevealed;
-        private bool _hasMatched;
-
         #endregion
 
         #region Ctor
@@ -57,6 +54,10 @@ namespace MemoryMatchingGame
 
         public int Number { get; set; } = 0;
 
+        public bool IsRevealed { get; set; }
+
+        public bool HasMatched { get; set; }
+
         #endregion
 
         #region Methods
@@ -71,7 +72,7 @@ namespace MemoryMatchingGame
 
         public void MatchTile()
         {
-            _hasMatched = true;
+            HasMatched = true;
             _matchTileCounter = _matchTileCounterDefault;
             _hiddenObject.Opacity = 1;
             _overlayObject.Opacity = 0;
@@ -79,14 +80,14 @@ namespace MemoryMatchingGame
 
         public void RevealTile()
         {
-            _isRevealed = true;
+            IsRevealed = true;
             _revealTileCounter = _revealTileCounterDefault;
             _overlayObject.Opacity = 0;
         }
 
         public void AnimateTile()
         {
-            if (_hasMatched)
+            if (HasMatched)
             {
                 _matchTileCounter--;
 
@@ -97,7 +98,7 @@ namespace MemoryMatchingGame
             else
             {
                 // on reveal appear the hidden tile inside
-                if (_isRevealed)
+                if (IsRevealed)
                 {
                     if (!_hiddenObject.HasAppeared)
                         _hiddenObject.Appear();
@@ -105,7 +106,7 @@ namespace MemoryMatchingGame
                     _revealTileCounter--;
 
                     if (_revealTileCounter <= 0)
-                        _isRevealed = false;
+                        IsRevealed = false;
                 }
                 else
                 {

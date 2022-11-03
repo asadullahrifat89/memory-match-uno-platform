@@ -65,6 +65,8 @@ namespace MemoryMatchingGame
         private (string Id, int Number) _selectedTile1 = new(null, -1);
         private (string Id, int Number) _selectedTile2 = new(null, -1);
 
+        private bool _canSelect;
+
         #endregion
 
         #region Ctor
@@ -130,6 +132,12 @@ namespace MemoryMatchingGame
 
         private void MemoryTile_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            if (!_canSelect)
+            {
+                SoundHelper.PlaySound(SoundType.SELECTION_BARRED);
+                return;
+            }
+
             MemoryTile tile = sender as MemoryTile;
 
             if (_selectedTile1.Id.IsNullOrBlank())
@@ -163,7 +171,7 @@ namespace MemoryMatchingGame
                 if (tile1.Id == tile2.Id && tile1.Number != tile2.Number)
                 {
                     _collectibleCollected++;
-                    
+
                     AddScore(5);
                     AddHealth(_playerHealthRejuvenationPoint);
 
@@ -296,9 +304,18 @@ namespace MemoryMatchingGame
             ScoreText.Text = _score.ToString("#");
             PlayerHealthBar.Value = _playerHealth;
 
+            _canSelect = (GameView.GetGameObjects<MemoryTile>().Count(x => x.IsRevealed) == 2) ? false : true;
+
             DepleteHealth();
             UpdateGameObjects();
             RemoveGameObjects();
+
+            // if all tiles are hidden then reset the selected tiles
+            if (GameView.GetGameObjects<MemoryTile>().All(x => !x.IsRevealed))
+            {
+                _selectedTile1 = new(null, -1);
+                _selectedTile2 = new(null, -1);
+            }
 
             // once all the tiles are matched move to next level and start game
             if (!GameView.GetGameObjects<MemoryTile>().Any())
@@ -444,7 +461,10 @@ namespace MemoryMatchingGame
             memoryTile.AnimateTile();
 
             if (memoryTile.HasFaded)
+            {
+                memoryTile.PointerPressed -= MemoryTile_PointerPressed;
                 GameView.AddDestroyableGameObject(memoryTile);
+            }
         }
 
         private void SetMemoryTiles()
