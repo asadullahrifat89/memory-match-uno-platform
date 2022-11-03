@@ -91,19 +91,12 @@
             <SolidColorBrush x:Key="SystemAccentColorLight2" Color="#3e8113" />
             <SolidColorBrush x:Key="SystemAccentColorDark1" Color="#3e8113" />
 
+            <SolidColorBrush x:Key="GameBackgroundColor" Color="#8cc222" />
+
             <SolidColorBrush x:Key="FrameBackgroundColor" Color="#3e8113" />
             <SolidColorBrush x:Key="ProgressBarErrorColor" Color="#c50500" />
             <SolidColorBrush x:Key="ProgressBarForegroundColor" Color="#3e8113" />
             <SolidColorBrush x:Key="ProgressBarOkColor" Color="#3e8113" />
-
-            <SolidColorBrush x:Key="GameBackgroundColor" Color="#8cc222" />
-
-            <SolidColorBrush x:Key="WormBodyColor" Color="#f7b239" />
-            <SolidColorBrush x:Key="WormBorderColor" Color="#be1623" />
-
-            <SolidColorBrush x:Key="GameBackgroundColor" Color="#b9e1ff" />
-            <SolidColorBrush x:Key="SpotBackgroundColor1" Color="#80c8ff" />
-            <SolidColorBrush x:Key="SpotBackgroundColor2" Color="#a6d9ff" />
             <!--#endregion-->
 
         </ResourceDictionary>
