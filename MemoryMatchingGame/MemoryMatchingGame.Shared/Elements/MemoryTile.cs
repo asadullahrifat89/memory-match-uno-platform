@@ -15,7 +15,7 @@ namespace MemoryMatchingGame
         private Grid _content;
 
         private int _revealTileCounter;
-        private readonly int _revealTileCounterDefault = 60;
+        private readonly int _revealTileCounterDefault = 70;
 
         private int _matchTileCounter;
         private readonly int _matchTileCounterDefault = 50;

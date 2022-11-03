@@ -67,8 +67,9 @@ namespace MemoryMatchingGame
         private IEnumerable<MemoryTile> _memoryTilesInGame;
 
         private bool _isRevealMode;
-        private int _revealTilesCounter;
-        private readonly int _revealTilesCounterDefault = 250;
+        private double _revealTilesCounter;
+        private double _revealTilesCounterPoint;
+        private readonly int _revealTilesCounterDefault = 200;
 
         #endregion
 
@@ -279,6 +280,7 @@ namespace MemoryMatchingGame
             _playerHealthDepletionPoint = _healthDepletePointDefault;
             _playerHealthRejuvenationPoint = _healthGainPointDefault;
             _playerHealthDepletionCounter = 10;
+            _revealTilesCounterPoint = _revealTilesCounterDefault;
 
             PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
 
@@ -483,7 +485,7 @@ namespace MemoryMatchingGame
 
             _canSelect = false;
             _isRevealMode = true;
-            _revealTilesCounter = _revealTilesCounterDefault;
+            _revealTilesCounter = _revealTilesCounterPoint;
 
         }
 
@@ -595,6 +597,8 @@ namespace MemoryMatchingGame
 
             _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.1 * _difficultyMultiplier;
             _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
+            _revealTilesCounterPoint = _revealTilesCounterDefault + 2 * _difficultyMultiplier;
+
             _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
 
             _difficultyMultiplier++;
