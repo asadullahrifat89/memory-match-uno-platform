@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -9,8 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using Windows.Foundation;
-using Windows.System;
 
 namespace MemoryMatchingGame
 {
@@ -68,6 +65,10 @@ namespace MemoryMatchingGame
         private bool _canSelect;
 
         private IEnumerable<MemoryTile> _memoryTilesInGame;
+
+        private bool _isRevealMode;
+        private int _revealModeCounter;
+        private readonly int _revealModeCounterDefault = 250;
 
         #endregion
 
@@ -189,7 +190,6 @@ namespace MemoryMatchingGame
                 else
                 {
                     SoundHelper.PlaySound(SoundType.TILE_INCORRECT_MATCH);
-
 #if DEBUG
                     Console.WriteLine("TILES DON'T MATCH");
 #endif
@@ -308,7 +308,21 @@ namespace MemoryMatchingGame
 
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
-            DepleteHealth();
+            if (_isRevealMode)
+            {
+                _revealModeCounter--;
+
+                if (_revealModeCounter <= 0)
+                {
+                    _isRevealMode = false;
+                    _canSelect = true;
+                }
+            }
+            else
+            {
+                DepleteHealth();
+            }
+
             UpdateGameObjects();
             RemoveGameObjects();
 
@@ -317,31 +331,30 @@ namespace MemoryMatchingGame
             {
                 LevelUp();
                 SpawnMemoryTiles();
-
-                return;
-            }
-
-            // if all tiles are hidden then reset the selected tiles
-            if (_memoryTilesInGame.All(x => !x.IsRevealed))
-            {
-                _selectedTile1 = new(null, -1);
-                _selectedTile2 = new(null, -1);
-
-                _canSelect = true;
             }
             else
             {
-                if (_memoryTilesInGame.Count(x => x.IsRevealed) == 2)
-                    _canSelect = false;
+                // if all tiles are hidden then tiles can be selected
+                if (_memoryTilesInGame.All(x => !x.IsRevealed))
+                {
+                    _selectedTile1 = new(null, -1);
+                    _selectedTile2 = new(null, -1);
+
+                    _canSelect = true;
+                }
+                else
+                {
+                    if (_memoryTilesInGame.Count(x => x.IsRevealed) == 2)
+                        _canSelect = false;
+                }
+
+                //if (_isPowerMode)
+                //{
+                //    PowerUpCoolDown();
+                //    if (_powerModeDurationCounter <= 0)
+                //        PowerDown();
+                //}
             }
-
-            //if (_isPowerMode)
-            //{
-            //    PowerUpCoolDown();
-            //    if (_powerModeDurationCounter <= 0)
-            //        PowerDown();
-            //}
-
         }
 
         private void PauseGame()
@@ -465,6 +478,17 @@ namespace MemoryMatchingGame
             ShuffleMemoryTiles();
             SetMemoryTiles();
             SetViewSizeFromTiles();
+
+            _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
+
+            foreach (var tile in _memoryTilesInGame)
+            {
+                tile.RevealTile();
+            }
+
+            _isRevealMode = true;
+            _revealModeCounter = _revealModeCounterDefault;
+            _canSelect = false;
         }
 
         private void UpdateMemoryTile(MemoryTile memoryTile)
