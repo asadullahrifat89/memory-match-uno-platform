@@ -402,9 +402,7 @@ namespace MemoryMatchingGame
             Card.SetLeft(Card.GetLeft() + _gameSpeed);
 
             if (Card.GetLeft() > UnderView.Width)
-            {
                 RecyleCard(Card);
-            }
         }
 
         private void RecyleCard(GameObject Card)

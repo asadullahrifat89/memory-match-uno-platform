@@ -25,10 +25,6 @@ namespace MemoryMatchingGame
 
         #region Properties
 
-        public double X { get; set; }
-
-        public double Y { get; set; }
-
         public bool IsFlaggedForShrinking { get; set; }
 
         public bool HasShrinked => _compositeTransform.ScaleX <= 0;

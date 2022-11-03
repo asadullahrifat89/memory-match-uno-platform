@@ -79,6 +79,17 @@
             </Style>
             <!--#endregion-->
 
+            <!--#region Card Style-->
+            <Style x:Key="CardStyle" TargetType="Border">
+                <Setter Property="Background" Value="#ffffff" />
+                <Setter Property="BorderBrush" Value="#3e8113" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BorderThickness" Value="3" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <!--#endregion-->
+
             <!--#region Leaderboard Style-->
             <Style x:Key="LeaderboardRecordContainer" TargetType="Border">
                 <Setter Property="Background" Value="#3e8113" />

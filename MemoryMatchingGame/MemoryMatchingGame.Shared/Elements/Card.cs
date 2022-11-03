@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,6 +15,8 @@ namespace MemoryMatchingGame
 
             Height = Constants.CARD_SIZE * scale;
             Width = Constants.CARD_SIZE * scale;
+
+            Style = App.Current.Resources["CardStyle"] as Style;
         }
 
         #endregion
