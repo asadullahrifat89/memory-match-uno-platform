@@ -15,7 +15,7 @@ namespace MemoryMatchingGame
         private Grid _content;
 
         private int _revealTileCounter;
-        private readonly int _revealTileCounterDefault = 100;
+        private readonly int _revealTileCounterDefault = 80;
 
         private int _matchTileCounter;
         private readonly int _matchTileCounterDefault = 50;
@@ -73,6 +73,7 @@ namespace MemoryMatchingGame
         public void MatchTile()
         {
             HasMatched = true;
+            IsRevealed = false;
             _matchTileCounter = _matchTileCounterDefault;
             _hiddenObject.Opacity = 1;
             _overlayObject.Opacity = 0;

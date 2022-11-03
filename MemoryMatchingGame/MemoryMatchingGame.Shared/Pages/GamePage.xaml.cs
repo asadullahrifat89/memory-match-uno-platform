@@ -67,6 +67,8 @@ namespace MemoryMatchingGame
 
         private bool _canSelect;
 
+        private IEnumerable<MemoryTile> _memoryTilesInGame;
+
         #endregion
 
         #region Ctor
@@ -159,7 +161,7 @@ namespace MemoryMatchingGame
 
             if (!_selectedTile1.Id.IsNullOrBlank() && !_selectedTile2.Id.IsNullOrBlank())
             {
-                var tiles = GameView.GetGameObjects<MemoryTile>();
+                var tiles = _memoryTilesInGame;
 
                 var tile1 = tiles.FirstOrDefault(x => x.Id == _selectedTile1.Id && x.Number == _selectedTile1.Number);
                 var tile2 = tiles.FirstOrDefault(x => x.Id == _selectedTile2.Id && x.Number == _selectedTile2.Number);
@@ -304,24 +306,33 @@ namespace MemoryMatchingGame
             ScoreText.Text = _score.ToString("#");
             PlayerHealthBar.Value = _playerHealth;
 
-            _canSelect = (GameView.GetGameObjects<MemoryTile>().Count(x => x.IsRevealed) == 2) ? false : true;
+            _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
             DepleteHealth();
             UpdateGameObjects();
             RemoveGameObjects();
 
-            // if all tiles are hidden then reset the selected tiles
-            if (GameView.GetGameObjects<MemoryTile>().All(x => !x.IsRevealed))
-            {
-                _selectedTile1 = new(null, -1);
-                _selectedTile2 = new(null, -1);
-            }
-
             // once all the tiles are matched move to next level and start game
-            if (!GameView.GetGameObjects<MemoryTile>().Any())
+            if (!_memoryTilesInGame.Any())
             {
                 LevelUp();
                 SpawnMemoryTiles();
+
+                return;
+            }
+
+            // if all tiles are hidden then reset the selected tiles
+            if (_memoryTilesInGame.All(x => !x.IsRevealed))
+            {
+                _selectedTile1 = new(null, -1);
+                _selectedTile2 = new(null, -1);
+
+                _canSelect = true;
+            }
+            else
+            {
+                if (_memoryTilesInGame.Count(x => x.IsRevealed) == 2)
+                    _canSelect = false;
             }
 
             //if (_isPowerMode)
