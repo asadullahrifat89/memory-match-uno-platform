@@ -139,11 +139,13 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup2.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\localization.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\correct_match.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\card_flip.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background1.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background2.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\background3.mp3" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\card_flip.mp3" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\correct_match.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\card_flip2.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\correct_match2.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\game-over.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\incorrect_match.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\intro2.mp3" />
