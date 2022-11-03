@@ -483,8 +483,8 @@ namespace MemoryMatchingGame
 
         private void SetViewSizeFromTiles()
         {
-            GameView.Height = (_columns * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
-            GameView.Width = (_rows * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
+            GameView.Height = (_rows * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
+            GameView.Width = (_columns * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
         }
 
         private void NavigateToPage(Type pageType)
