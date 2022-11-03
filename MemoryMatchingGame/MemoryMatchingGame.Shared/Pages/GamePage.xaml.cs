@@ -69,7 +69,7 @@ namespace MemoryMatchingGame
         private bool _isRevealMode;
         private double _revealTilesCounter;
         private double _revealTilesCounterPoint;
-        private readonly int _revealTilesCounterDefault = 200;
+        private readonly int _revealTilesCounterDefault = 250;
 
         #endregion
 
@@ -511,34 +511,9 @@ namespace MemoryMatchingGame
             }
         }
 
-        private void SetMemoryTiles()
-        {
-            GameView.Children.Clear();
-
-            int tileNum = 0;
-
-            for (int i = 0; i < _rows; i++)
-            {
-                for (int j = 0; j < _columns; j++)
-                {
-                    MemoryTile memoryTile = _createdMemoryTiles[tileNum];
-
-                    memoryTile.Number = tileNum;
-
-                    memoryTile.SetTop((memoryTile.Height + 5) * i);
-                    memoryTile.SetLeft((memoryTile.Width + 5) * j);
-
-                    memoryTile.PointerPressed += MemoryTile_PointerPressed;
-
-                    GameView.Children.Add(memoryTile);
-
-                    tileNum++;
-                }
-            }
-        }
-
         private void CreateMemoryTiles()
         {
+            // get tile pairs count
             _memoryTilePairsCount = (_rows * _columns) / 2;
 
             _createdMemoryTiles.Clear();
@@ -568,12 +543,44 @@ namespace MemoryMatchingGame
 
         private void ShuffleMemoryTiles()
         {
-            //Shuffle memory tiles
+            //shuffle memory tiles
             for (int i = 0; i < 64; i++)
             {
                 _createdMemoryTiles.Reverse();
                 _createdMemoryTiles.Move(_random.Next(0, _createdMemoryTiles.Count), _random.Next(0, _createdMemoryTiles.Count));
             }
+        }
+
+        private void SetMemoryTiles()
+        {
+            GameView.Children.Clear();
+
+            int tileNum = 0;
+
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    MemoryTile memoryTile = _createdMemoryTiles[tileNum];
+
+                    memoryTile.Number = tileNum;
+
+                    memoryTile.SetTop((memoryTile.Height + 5) * i);
+                    memoryTile.SetLeft((memoryTile.Width + 5) * j);
+
+                    memoryTile.PointerPressed += MemoryTile_PointerPressed;
+
+                    GameView.Children.Add(memoryTile);
+
+                    tileNum++;
+                }
+            }
+        }
+
+        private void SetViewSizeFromTiles()
+        {
+            GameView.Height = (_rows * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
+            GameView.Width = (_columns * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
         }
 
         #endregion
@@ -659,12 +666,6 @@ namespace MemoryMatchingGame
 #if DEBUG
             Console.WriteLine($"SCALE: {_scale}");
 #endif
-        }
-
-        private void SetViewSizeFromTiles()
-        {
-            GameView.Height = (_rows * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
-            GameView.Width = (_columns * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
         }
 
         private void NavigateToPage(Type pageType)
