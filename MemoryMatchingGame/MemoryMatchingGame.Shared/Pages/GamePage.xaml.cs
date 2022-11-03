@@ -39,6 +39,9 @@ namespace MemoryMatchingGame
         private int _cardPeekCounter;
         private readonly int _cardPeekCounterDefault = 50;
 
+        private int _initialPeekCounter;
+        private readonly int _initialPeekCounterDefault = 100;
+
         private int _powerModeDurationCounter;
         private readonly int _powerModeDuration = 1000;
 
@@ -46,7 +49,16 @@ namespace MemoryMatchingGame
         private double _scoreCap;
         private double _difficultyMultiplier;
 
+        private double _playerHealth;
+
         private int _collectibleCollected;
+
+        private int _playerHealthDepletionCounter;
+        private double _playerHealthDepletionPoint;
+        private double _playerHealthRejuvenationPoint;
+
+        private readonly double _healthDepletePointDefault = 0.5;
+        private readonly double _healthGainPointDefault = 10;
 
         #endregion
 
@@ -90,7 +102,7 @@ namespace MemoryMatchingGame
 
         private void LoadGameElements()
         {
-            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.CARD).Select(x => x.Value).ToArray();           
+            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.CARD).Select(x => x.Value).ToArray();
             _powerUps = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.POWERUP).Select(x => x.Value).ToArray();
         }
 
@@ -105,7 +117,7 @@ namespace MemoryMatchingGame
 
         private void PopulateGameView()
         {
-           //TODO: add cards to container
+            //TODO: add cards to container
         }
 
         private void StartGame()
@@ -118,12 +130,11 @@ namespace MemoryMatchingGame
 
             _gameSpeed = _gameSpeedDefault * _scale;
 
-         
-
             _isGameOver = false;
             _isPowerMode = false;
 
-            _powerModeDurationCounter = _powerModeDuration;            
+            _powerModeDurationCounter = _powerModeDuration;
+            _initialPeekCounter = _initialPeekCounterDefault;
 
             _score = 0;
             _scoreCap = 50;
@@ -131,6 +142,11 @@ namespace MemoryMatchingGame
 
             _collectibleCollected = 0;
             ScoreText.Text = "0";
+
+            _playerHealthDepletionPoint = _healthDepletePointDefault;
+            _playerHealth = 100;
+            _playerHealthRejuvenationPoint = _healthGainPointDefault;
+            _playerHealthDepletionCounter = 10;
 
             StartGameSounds();
 
@@ -153,7 +169,10 @@ namespace MemoryMatchingGame
         private void GameViewLoop()
         {
             ScoreText.Text = _score.ToString("#");
-            
+            PlayerHealthBar.Value = _playerHealth;
+
+            DepleteHealth();
+
             //UpdateGameObjects();
             //RemoveGameObjects();
 
@@ -167,7 +186,7 @@ namespace MemoryMatchingGame
         }
 
         private void PauseGame()
-        {   
+        {
             ShowInGameTextMessage("GAME_PAUSED");
 
             _gameViewTimer?.Dispose();
@@ -177,7 +196,7 @@ namespace MemoryMatchingGame
         }
 
         private void ResumeGame()
-        {            
+        {
             HideInGameTextMessage();
 
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
@@ -208,7 +227,68 @@ namespace MemoryMatchingGame
             //NavigateToPage(typeof(GameOverPage));
         }
 
-        #endregion 
+        #endregion
+
+        #region Health
+
+        private void AddHealth(double health)
+        {
+            if (_playerHealth < 100)
+            {
+                if (_playerHealth + health > 100)
+                    health = _playerHealth + health - 100;
+
+                _playerHealth += health;
+            }
+        }
+
+        private void DepleteHealth()
+        {
+            _playerHealthDepletionCounter--;
+
+            if (_playerHealthDepletionCounter <= 0)
+            {
+                _playerHealth -= _playerHealthDepletionPoint;
+                _playerHealthDepletionCounter = 10;
+            }
+
+            if (_playerHealth <= 0)
+                GameOver();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Score
+
+        private void AddScore(double score)
+        {
+            _score += score;
+            ScaleDifficulty();
+        }
+
+        #endregion
+
+        #region Difficulty
+
+        private void ScaleDifficulty()
+        {
+            if (_score > _scoreCap)
+            {
+                _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.1 * _difficultyMultiplier;
+                _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
+                _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
+
+                _difficultyMultiplier++;
+                _scoreCap += 50;
+
+#if DEBUG
+                Console.WriteLine($"GAME SPEED: {_gameSpeed}");
+                Console.WriteLine($"SCORE CAP: {_scoreCap}");
+#endif
+            }
+        }
 
         #endregion
 
