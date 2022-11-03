@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Linq;
 
 namespace MemoryMatchingGame
 {
@@ -9,6 +10,9 @@ namespace MemoryMatchingGame
         #region Fields
 
         private GameObject _hiddenObject;
+        private GameObject _overlayObject;
+
+        private Grid _content;
 
         private int _revealTileCounter;
         private readonly int _revealTileCounterDefault = 100;
@@ -34,6 +38,15 @@ namespace MemoryMatchingGame
 
             _hiddenObject = new GameObject() { Height = Height, Width = Width };
             _hiddenObject.Opacity = 0;
+
+            _overlayObject = new GameObject() { Height = Height, Width = Width };
+            _overlayObject.SetContent(Constants.ELEMENT_TEMPLATES.FirstOrDefault(x => x.Key == ElementType.MEMORYTILE_OVERLAY).Value);
+            _overlayObject.Opacity = 0;
+
+            _content = new Grid();
+
+            _content.Children.Add(_hiddenObject);
+            _content.Children.Add(_overlayObject);
         }
 
         #endregion
@@ -51,7 +64,9 @@ namespace MemoryMatchingGame
         public void SetTileContent(Uri uri)
         {
             _hiddenObject.SetContent(uri);
-            Child = _hiddenObject;
+            _overlayObject.Opacity = 1;
+
+            Child = _content;
         }
 
         public void MatchTile()
@@ -59,12 +74,14 @@ namespace MemoryMatchingGame
             _hasMatched = true;
             _matchTileCounter = _matchTileCounterDefault;
             _hiddenObject.Opacity = 1;
+            _overlayObject.Opacity = 0;
         }
 
         public void RevealTile()
         {
             _isRevealed = true;
             _revealTileCounter = _revealTileCounterDefault;
+            _overlayObject.Opacity = 0;
         }
 
         public void AnimateTile()
@@ -94,6 +111,8 @@ namespace MemoryMatchingGame
                 {
                     if (!_hiddenObject.HasFaded)
                         _hiddenObject.Fade();
+                    else
+                        _overlayObject.Opacity = 1;
                 }
             }
         }

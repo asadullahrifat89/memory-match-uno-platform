@@ -85,13 +85,11 @@
                     <Image
                         Width="50"
                         Height="50"
-                        Margin="0,2,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Source="ms-appx:///Assets/Images/logo_game.png" />
                     <TextBlock
                         Name="ScoreText"
-                        Margin="5,0,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         FontSize="20"

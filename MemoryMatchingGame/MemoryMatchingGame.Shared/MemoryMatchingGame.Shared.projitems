@@ -130,6 +130,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card15.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\clock.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_brand.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card_overlay.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_game.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card11.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\car12.png" />

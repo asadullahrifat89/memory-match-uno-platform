@@ -98,7 +98,8 @@ namespace MemoryMatchingGame
     public enum ElementType
     {
         NONE,
-        MEMORYTILE,
         POWERUP,
+        MEMORYTILE,
+        MEMORYTILE_OVERLAY,
     }
 }

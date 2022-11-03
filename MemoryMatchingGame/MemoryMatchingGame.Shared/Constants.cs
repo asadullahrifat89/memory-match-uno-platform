@@ -35,6 +35,8 @@ namespace MemoryMatchingGame
             new KeyValuePair<ElementType, Uri>(ElementType.MEMORYTILE, new Uri("ms-appx:///Assets/Images/card14.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.MEMORYTILE, new Uri("ms-appx:///Assets/Images/card15.png")),
 
+            new KeyValuePair<ElementType, Uri>(ElementType.MEMORYTILE_OVERLAY, new Uri("ms-appx:///Assets/Images/card_overlay.png")),
+
             new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup1.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup2.png")),
         };
