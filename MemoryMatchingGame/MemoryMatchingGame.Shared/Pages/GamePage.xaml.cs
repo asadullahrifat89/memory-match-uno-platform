@@ -62,8 +62,8 @@ namespace MemoryMatchingGame
 
         private ObservableCollection<MemoryTile> _createdMemoryTiles = new ObservableCollection<MemoryTile>();
 
-        private string _selectedTile1Id;
-        private string _selectedTile2Id;
+        private (string Id, int Number) _selectedTile1 = new(null, -1);
+        private (string Id, int Number) _selectedTile2 = new(null, -1);
 
         #endregion
 
@@ -132,29 +132,35 @@ namespace MemoryMatchingGame
         {
             MemoryTile tile = sender as MemoryTile;
 
-            if (_selectedTile1Id.IsNullOrBlank())
+            if (_selectedTile1.Id.IsNullOrBlank())
             {
-                _selectedTile1Id = tile.Id;
+                _selectedTile1 = new(tile.Id, tile.Number);
                 tile.RevealTile();
 #if DEBUG
-                Console.WriteLine($"TILE1 ID: {_selectedTile1Id} NUMBER: {tile.TileNumber}");
+                Console.WriteLine($"TILE1 ID: {_selectedTile1} NUMBER: {tile.Number}");
 #endif
             }
-            else if (!_selectedTile1Id.IsNullOrBlank())
+            else if (!_selectedTile1.Id.IsNullOrBlank())
             {
-                _selectedTile2Id = tile.Id;
+                _selectedTile2 = new(tile.Id, tile.Number);
                 tile.RevealTile();
 #if DEBUG
-                Console.WriteLine($"TILE2 ID: {_selectedTile2Id} NUMBER: {tile.TileNumber}");
+                Console.WriteLine($"TILE2 ID: {_selectedTile2} NUMBER: {tile.Number}");
 #endif
             }
 
-            if (!_selectedTile1Id.IsNullOrBlank() && !_selectedTile2Id.IsNullOrBlank())
+            if (!_selectedTile1.Id.IsNullOrBlank() && !_selectedTile2.Id.IsNullOrBlank())
             {
-                var tile1 = GameView.GetGameObjects<MemoryTile>().First(x => x.Id == _selectedTile1Id);
-                var tile2 = GameView.GetGameObjects<MemoryTile>().First(x => x.Id == _selectedTile2Id);
+                var tiles = GameView.GetGameObjects<MemoryTile>();
 
-                if (tile1.Id == tile2.Id && tile1.TileNumber != tile2.TileNumber)
+                var tile1 = tiles.FirstOrDefault(x => x.Id == _selectedTile1.Id && x.Number == _selectedTile1.Number);
+                var tile2 = tiles.FirstOrDefault(x => x.Id == _selectedTile2.Id && x.Number == _selectedTile2.Number);
+
+#if DEBUG
+                Console.WriteLine($"MATCHING TILES: {tile1.Id}, {tile1.Number} & {tile2.Id}, {tile2.Number}");
+#endif
+
+                if (tile1.Id == tile2.Id && tile1.Number != tile2.Number)
                 {
                     AddScore(5);
                     SoundHelper.PlaySound(SoundType.CORRECT_MATCH);
@@ -169,10 +175,14 @@ namespace MemoryMatchingGame
                 else
                 {
                     SoundHelper.PlaySound(SoundType.INCORRECT_MATCH);
+
+#if DEBUG
+                    Console.WriteLine("TILES DON'T MATCH");
+#endif
                 }
 
-                _selectedTile1Id = null;
-                _selectedTile2Id = null;
+                _selectedTile1 = new(null, -1);
+                _selectedTile2 = new(null, -1);
             }
             else
             {
@@ -422,8 +432,8 @@ namespace MemoryMatchingGame
 
         private void SpawnMemoryTiles()
         {
-            _selectedTile1Id = null;
-            _selectedTile2Id = null;
+            _selectedTile1 = new(null, -1);
+            _selectedTile2 = new(null, -1);
 
             CreateMemoryTiles();
             ShuffleMemoryTiles();
@@ -451,7 +461,7 @@ namespace MemoryMatchingGame
                 {
                     MemoryTile memoryTile = _createdMemoryTiles[tileNum];
 
-                    memoryTile.TileNumber = tileNum;
+                    memoryTile.Number = tileNum;
 
                     memoryTile.SetTop((memoryTile.Height + 5) * i);
                     memoryTile.SetLeft((memoryTile.Width + 5) * j);

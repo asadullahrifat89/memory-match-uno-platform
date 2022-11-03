@@ -42,7 +42,7 @@ namespace MemoryMatchingGame
 
         public string Id { get; set; }
 
-        public int TileNumber { get; set; } = 0;
+        public int Number { get; set; } = 0;
 
         #endregion
 
