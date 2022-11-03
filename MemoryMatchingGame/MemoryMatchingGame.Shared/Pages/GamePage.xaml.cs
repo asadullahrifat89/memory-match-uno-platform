@@ -162,6 +162,7 @@ namespace MemoryMatchingGame
 
                 if (tile1.Id == tile2.Id && tile1.Number != tile2.Number)
                 {
+                    _collectibleCollected++;
                     AddScore(5);
                     SoundHelper.PlaySound(SoundType.CORRECT_MATCH);
 
@@ -349,9 +350,7 @@ namespace MemoryMatchingGame
             };
 
             SoundHelper.PlaySound(SoundType.GAME_OVER);
-
-            //TODO: to game over page
-            //NavigateToPage(typeof(GameOverPage));
+            NavigateToPage(typeof(GameOverPage));
         }
 
         #endregion

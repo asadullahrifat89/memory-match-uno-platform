@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using System;
+﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 
 namespace MemoryMatchingGame
 {
-    public sealed partial class StartPage : Page
+    public sealed partial class LoginPage : Page
     {
         #region Fields
 
@@ -21,7 +22,7 @@ namespace MemoryMatchingGame
         private double _windowHeight, _windowWidth;
         private double _scale;
 
-        private readonly int _gameSpeed = 5;
+        private readonly int _gameSpeed = 8;
 
         private int _markNum;
 
@@ -33,9 +34,9 @@ namespace MemoryMatchingGame
 
         #region Ctor
 
-        public StartPage()
+        public LoginPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             _backendService = (Application.Current as App).Host.Services.GetRequiredService<IBackendService>();
 
             _windowHeight = Window.Current.Bounds.Height;
@@ -44,8 +45,8 @@ namespace MemoryMatchingGame
             LoadGameElements();
             PopulateGameViews();
 
-            Loaded += GamePage_Loaded;
-            Unloaded += GamePage_Unloaded;
+            this.Loaded += LoginPage_Loaded;
+            this.Unloaded += LoginPage_Unloaded;
         }
 
         #endregion
@@ -54,27 +55,29 @@ namespace MemoryMatchingGame
 
         #region Page
 
-        private async void GamePage_Loaded(object sender, RoutedEventArgs e)
+        private void LoginPage_Loaded(object sender, RoutedEventArgs e)
         {
+            this.SetLocalization();
+
             SizeChanged += GamePage_SizeChanged;
             StartAnimation();
 
-            LocalizationHelper.CheckLocalizationCache();
-            await LocalizationHelper.LoadLocalizationKeys(() =>
+            // if user was already logged in or came here after sign up
+            if (PlayerCredentialsHelper.GetCachedPlayerCredentials() is PlayerCredentials authCredentials
+                && !authCredentials.UserName.IsNullOrBlank()
+                && !authCredentials.Password.IsNullOrBlank())
             {
-                this.SetLocalization();
-
-                SoundHelper.LoadGameSounds(() =>
-                {
-                    StartGameSounds();
-                    AssetHelper.PreloadAssets(progressBar: ProgressBar, messageBlock: ProgressBarMessageBlock);
-                });
-            });
-
-            await CheckUserSession();
+                UserNameBox.Text = authCredentials.UserName;
+                PasswordBox.Text = authCredentials.Password;
+            }
+            else
+            {
+                UserNameBox.Text = null;
+                PasswordBox.Text = null;
+            }
         }
 
-        private void GamePage_Unloaded(object sender, RoutedEventArgs e)
+        private void LoginPage_Unloaded(object sender, RoutedEventArgs e)
         {
             SizeChanged -= GamePage_SizeChanged;
             StopAnimation();
@@ -96,45 +99,9 @@ namespace MemoryMatchingGame
 
         #region Buttons
 
-        private void LanguageButton_Click(object sender, RoutedEventArgs e)
+        private void GoBackButton_Click(object sender, RoutedEventArgs e)
         {
-            if ((sender as Button)?.Tag is string tag)
-            {
-                SoundHelper.PlaySound(SoundType.MENU_SELECT);
-
-                LocalizationHelper.CurrentCulture = tag;
-
-                if (CookieHelper.IsCookieAccepted())
-                    LocalizationHelper.SaveLocalizationCache(tag);
-
-                this.SetLocalization();
-            }
-        }
-
-        private void HowToPlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            //TODO: HowToPlayPage
-            //NavigateToPage(typeof(HowToPlayPage));
-        }
-
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateToPage(typeof(GamePage));
-        }
-
-        private void LeaderboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateToPage(typeof(LeaderboardPage));
-        }
-
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateToPage(typeof(LoginPage));
-        }
-
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            PerformLogout();
+            NavigateToPage(typeof(StartPage));
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
@@ -142,72 +109,72 @@ namespace MemoryMatchingGame
             NavigateToPage(typeof(SignUpPage));
         }
 
-        private void CookieAcceptButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            CookieHelper.SetCookieAccepted();
-            CookieToast.Visibility = Visibility.Collapsed;
+            if (LoginButton.IsEnabled)
+                await PerformLogin();
         }
 
-        private void CookieDeclineButton_Click(object sender, RoutedEventArgs e)
+        #endregion
+
+        #region Input Fields
+
+        private void UserNameBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CookieHelper.SetCookieDeclined();
-            CookieToast.Visibility = Visibility.Collapsed;
+            EnableLoginButton();
+        }
+
+        private void PasswordBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnableLoginButton();
+        }
+
+        private async void PasswordBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter && LoginButton.IsEnabled)
+                await PerformLogin();
         }
 
         #endregion
 
         #endregion
 
-        #region Methods
+        #region Methods      
 
         #region Logic
 
-        private async Task CheckUserSession()
+        private async Task PerformLogin()
         {
-            SessionHelper.TryLoadSession();
+            this.RunProgressBar();
 
-            if (GameProfileHelper.HasUserLoggedIn())
+            if (await Authenticate() && await GetGameProfile() && await GenerateSession())
             {
-                if (SessionHelper.HasSessionExpired())
+                if (PlayerScoreHelper.GameScoreSubmissionPending)
                 {
-                    SessionHelper.RemoveCachedSession();
-                    SetLoginContext();
+                    if (await SubmitScore())
+                        PlayerScoreHelper.GameScoreSubmissionPending = false;
                 }
-                else
-                {
-                    SetLogoutContext();
-                }
-            }
-            else
-            {
-                if (SessionHelper.HasSessionExpired())
-                {
-                    SessionHelper.RemoveCachedSession();
-                    SetLoginContext();
-                    ShowCookieToast();
-                }
-                else
-                {
-                    if (SessionHelper.GetCachedSession() is Session session
-                        && await ValidateSession(session)
-                        && await GetGameProfile())
-                    {
-                        SetLogoutContext();
-                        ShowWelcomeBackToast();
-                    }
-                    else
-                    {
-                        SetLoginContext();
-                        ShowCookieToast();
-                    }
-                }
+
+                this.StopProgressBar();
+
+                NavigateToPage(typeof(LeaderboardPage));
             }
         }
 
-        private async Task<bool> ValidateSession(Session session)
+        private async Task<bool> Authenticate()
         {
-            var (IsSuccess, _) = await _backendService.ValidateUserSession(session);
-            return IsSuccess;
+            (bool IsSuccess, string Message) = await _backendService.AuthenticateUser(
+                userNameOrEmail: UserNameBox.Text.Trim(),
+                password: PasswordBox.Text.Trim());
+
+            if (!IsSuccess)
+            {
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            return true;
         }
 
         private async Task<bool> GetGameProfile()
@@ -224,47 +191,37 @@ namespace MemoryMatchingGame
             return true;
         }
 
-        private void PerformLogout()
+        private async Task<bool> GenerateSession()
         {
-            SoundHelper.PlaySound(SoundType.MENU_SELECT);
-            SessionHelper.RemoveCachedSession();
-            AuthTokenHelper.AuthToken = null;
-            GameProfileHelper.GameProfile = null;
-            PlayerScoreHelper.PlayerScore = null;
+            (bool IsSuccess, string Message) = await _backendService.GenerateUserSession();
 
-            SetLoginContext();
+            if (!IsSuccess)
+            {
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            return true;
         }
 
-        private void ShowCookieToast()
+        private async Task<bool> SubmitScore()
         {
-            if (!CookieHelper.IsCookieAccepted())
-                CookieToast.Visibility = Visibility.Visible;
+            (bool IsSuccess, string Message) = await _backendService.SubmitUserGameScore(PlayerScoreHelper.PlayerScore.Score);
+
+            if (!IsSuccess)
+            {
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            return true;
         }
 
-        private void SetLogoutContext()
+        private void EnableLoginButton()
         {
-            LogoutButton.Visibility = Visibility.Visible;
-            LeaderboardButton.Visibility = Visibility.Visible;
-            LoginButton.Visibility = Visibility.Collapsed;
-            RegisterButton.Visibility = Visibility.Collapsed;
-        }
-
-        private void SetLoginContext()
-        {
-            LogoutButton.Visibility = Visibility.Collapsed;
-            LeaderboardButton.Visibility = Visibility.Collapsed;
-            LoginButton.Visibility = Visibility.Visible;
-            RegisterButton.Visibility = Visibility.Visible;
-        }
-
-        private async void ShowWelcomeBackToast()
-        {
-            SoundHelper.PlaySound(SoundType.POWER_UP);
-            UserName.Text = GameProfileHelper.GameProfile.User.UserName;
-
-            WelcomeBackToast.Opacity = 1;
-            await Task.Delay(TimeSpan.FromSeconds(5));
-            WelcomeBackToast.Opacity = 0;
+            LoginButton.IsEnabled = !UserNameBox.Text.IsNullOrBlank() && !PasswordBox.Text.IsNullOrBlank();
         }
 
         #endregion
@@ -281,13 +238,8 @@ namespace MemoryMatchingGame
 
         private void NavigateToPage(Type pageType)
         {
-            if (pageType == typeof(GamePage))
-                SoundHelper.StopSound(SoundType.INTRO);
-
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
             App.NavigateToPage(pageType);
-
-            App.EnterFullScreen(true);
         }
 
         #endregion

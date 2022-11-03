@@ -11,6 +11,10 @@
   <Import Project="MemoryMatchingGame.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
   <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\GameOverPage.xaml" />
+    <UpToDateCheckInput Remove="Pages\LeaderboardPage.xaml" />
+    <UpToDateCheckInput Remove="Pages\LoginPage.xaml" />
+    <UpToDateCheckInput Remove="Pages\SignUpPage.xaml" />
     <UpToDateCheckInput Remove="Pages\StartPage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +36,10 @@
     <_Globbed_Compile Remove="Helpers\ScalingHelper.cs" />
     <_Globbed_Compile Remove="Helpers\SessionHelper.cs" />
     <_Globbed_Compile Remove="Helpers\SoundHelper.cs" />
+    <_Globbed_Compile Remove="Pages\GameOverPage.xaml.cs" />
+    <_Globbed_Compile Remove="Pages\LeaderboardPage.xaml.cs" />
+    <_Globbed_Compile Remove="Pages\LoginPage.xaml.cs" />
+    <_Globbed_Compile Remove="Pages\SignUpPage.xaml.cs" />
     <_Globbed_Compile Remove="Pages\StartPage.xaml.cs" />
     <_Globbed_Compile Remove="Peripherals\AudioPlayer.cs" />
     <_Globbed_Compile Remove="Peripherals\LocalizationKey.cs" />
@@ -50,6 +58,10 @@
     <_Globbed_Content Remove="Assets\Sounds\power-up.mp3" />
   </ItemGroup>
   <ItemGroup>
+    <_Globbled_Page Remove="Pages\GameOverPage.xaml" />
+    <_Globbled_Page Remove="Pages\LeaderboardPage.xaml" />
+    <_Globbled_Page Remove="Pages\LoginPage.xaml" />
+    <_Globbled_Page Remove="Pages\SignUpPage.xaml" />
     <_Globbled_Page Remove="Pages\StartPage.xaml" />
   </ItemGroup>
 </Project>

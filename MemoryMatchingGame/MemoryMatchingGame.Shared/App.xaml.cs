@@ -68,8 +68,7 @@ namespace MemoryMatchingGame
             _systemNavigationManager = SystemNavigationManager.GetForCurrentView();
 
             _goBackNotAllowedToPages = new List<Type>() { typeof(GamePage) };
-            //TODO: fix the commented going back to page
-            _goBackPageRoutes = new List<(Type IfGoingBackTo, Type RouteTo)>() { /*(IfGoingBackTo: typeof(GameOverPage), RouteTo: typeof(StartPage))*/ };
+            _goBackPageRoutes = new List<(Type IfGoingBackTo, Type RouteTo)>() { (IfGoingBackTo: typeof(GameOverPage), RouteTo: typeof(StartPage)) };
 
             LocalizationHelper.CurrentCulture = "en";
         }
