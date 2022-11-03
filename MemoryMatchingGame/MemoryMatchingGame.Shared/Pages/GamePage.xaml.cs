@@ -67,8 +67,8 @@ namespace MemoryMatchingGame
         private IEnumerable<MemoryTile> _memoryTilesInGame;
 
         private bool _isRevealMode;
-        private int _revealModeCounter;
-        private readonly int _revealModeCounterDefault = 250;
+        private int _revealTilesCounter;
+        private readonly int _revealTilesCounterDefault = 250;
 
         #endregion
 
@@ -146,7 +146,7 @@ namespace MemoryMatchingGame
             if (_selectedTile1.Id.IsNullOrBlank())
             {
                 _selectedTile1 = new(tile.Id, tile.Number);
-                tile.RevealTile();
+                tile.RevealMemoryTile();
 #if DEBUG
                 Console.WriteLine($"TILE1 ID: {_selectedTile1} NUMBER: {tile.Number}");
 #endif
@@ -154,7 +154,7 @@ namespace MemoryMatchingGame
             else if (!_selectedTile1.Id.IsNullOrBlank())
             {
                 _selectedTile2 = new(tile.Id, tile.Number);
-                tile.RevealTile();
+                tile.RevealMemoryTile();
 #if DEBUG
                 Console.WriteLine($"TILE2 ID: {_selectedTile2} NUMBER: {tile.Number}");
 #endif
@@ -180,8 +180,8 @@ namespace MemoryMatchingGame
 
                     SoundHelper.PlaySound(SoundType.TILE_MATCH);
 
-                    tile1.MatchTile();
-                    tile2.MatchTile();
+                    tile1.MatchMemoryTile();
+                    tile2.MatchMemoryTile();
 
 #if DEBUG
                     Console.WriteLine("TILES MATCH");
@@ -283,7 +283,7 @@ namespace MemoryMatchingGame
             PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
 
             StartGameSounds();
-            SpawnMemoryTiles();
+            SpawnTiles();
 
             RunGame();
 #if DEBUG
@@ -309,19 +309,9 @@ namespace MemoryMatchingGame
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
             if (_isRevealMode)
-            {
-                _revealModeCounter--;
-
-                if (_revealModeCounter <= 0)
-                {
-                    _isRevealMode = false;
-                    _canSelect = true;
-                }
-            }
+                RevealMemoryTilesCoolDown();
             else
-            {
                 DepleteHealth();
-            }
 
             UpdateGameObjects();
             RemoveGameObjects();
@@ -330,7 +320,7 @@ namespace MemoryMatchingGame
             if (!_memoryTilesInGame.Any())
             {
                 LevelUp();
-                SpawnMemoryTiles();
+                SpawnTiles();
             }
             else
             {
@@ -469,7 +459,7 @@ namespace MemoryMatchingGame
 
         #region MemoryTile
 
-        private void SpawnMemoryTiles()
+        private void SpawnTiles()
         {
             _selectedTile1 = new(null, -1);
             _selectedTile2 = new(null, -1);
@@ -481,19 +471,36 @@ namespace MemoryMatchingGame
 
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
+            RevealMemoryTiles();
+        }
+
+        private void RevealMemoryTiles()
+        {
             foreach (var tile in _memoryTilesInGame)
             {
-                tile.RevealTile();
+                tile.RevealMemoryTile();
             }
 
-            _isRevealMode = true;
-            _revealModeCounter = _revealModeCounterDefault;
             _canSelect = false;
+            _isRevealMode = true;
+            _revealTilesCounter = _revealTilesCounterDefault;
+
+        }
+
+        private void RevealMemoryTilesCoolDown()
+        {
+            _revealTilesCounter--;
+
+            if (_revealTilesCounter <= 0)
+            {
+                _isRevealMode = false;
+                _canSelect = true;
+            }
         }
 
         private void UpdateMemoryTile(MemoryTile memoryTile)
         {
-            memoryTile.AnimateTile();
+            memoryTile.AnimateMemoryTile();
 
             if (memoryTile.HasFaded)
             {
@@ -543,10 +550,10 @@ namespace MemoryMatchingGame
                 var id = Guid.NewGuid().ToString();
 
                 var memoryTile = new MemoryTile(_scale) { Id = id };
-                memoryTile.SetTileContent(_memoryTiles[_markNum]);
+                memoryTile.SetMemoryTileContent(_memoryTiles[_markNum]);
 
                 var memoryTileMatch = new MemoryTile(_scale) { Id = id };
-                memoryTileMatch.SetTileContent(_memoryTiles[_markNum]);
+                memoryTileMatch.SetMemoryTileContent(_memoryTiles[_markNum]);
 
                 _createdMemoryTiles.Add(memoryTile);
                 _createdMemoryTiles.Add(memoryTileMatch);
@@ -596,8 +603,8 @@ namespace MemoryMatchingGame
             if (_columns < 4)
                 _columns++;
 
-            // increase rows upto 5
-            if (_columns == 4 && _rows < 5)
+            // increase rows upto 6
+            if (_columns == 4 && _rows < 6)
                 _rows++;
 
             SoundHelper.PlaySound(SoundType.LEVEL_UP);

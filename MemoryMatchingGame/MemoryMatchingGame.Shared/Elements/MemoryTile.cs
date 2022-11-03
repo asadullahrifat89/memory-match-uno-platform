@@ -15,7 +15,7 @@ namespace MemoryMatchingGame
         private Grid _content;
 
         private int _revealTileCounter;
-        private readonly int _revealTileCounterDefault = 80;
+        private readonly int _revealTileCounterDefault = 60;
 
         private int _matchTileCounter;
         private readonly int _matchTileCounterDefault = 50;
@@ -62,7 +62,7 @@ namespace MemoryMatchingGame
 
         #region Methods
 
-        public void SetTileContent(Uri uri)
+        public void SetMemoryTileContent(Uri uri)
         {
             _hiddenObject.SetContent(uri);
             _overlayObject.Opacity = 1;
@@ -70,7 +70,7 @@ namespace MemoryMatchingGame
             Child = _content;
         }
 
-        public void MatchTile()
+        public void MatchMemoryTile()
         {
             HasMatched = true;
             IsRevealed = false;
@@ -79,26 +79,26 @@ namespace MemoryMatchingGame
             _overlayObject.Opacity = 0;
         }
 
-        public void RevealTile()
+        public void RevealMemoryTile()
         {
             IsRevealed = true;
             _revealTileCounter = _revealTileCounterDefault;
             _overlayObject.Opacity = 0;
         }
 
-        public void AnimateTile()
+        public void AnimateMemoryTile()
         {
             if (HasMatched)
             {
                 _matchTileCounter--;
 
-                // once matched fade the tile
+                // once matched fade the parent tile that hosts the overlay and hidden tile
                 if (_matchTileCounter <= 0 && !HasFaded)
                     Fade();
             }
             else
             {
-                // on reveal appear the hidden tile inside
+                // if revealed make the hidden tile appear
                 if (IsRevealed)
                 {
                     if (!_hiddenObject.HasAppeared)
