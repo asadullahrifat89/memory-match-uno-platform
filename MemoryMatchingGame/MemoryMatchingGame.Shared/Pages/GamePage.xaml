@@ -49,7 +49,7 @@
                 <ProgressBar
                     x:Name="PlayerHealthBar"
                     Grid.Column="1"
-                    Height="45"
+                    Height="5"
                     Margin="5"
                     VerticalAlignment="Center"
                     Foreground="Green"

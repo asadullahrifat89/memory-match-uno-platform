@@ -177,7 +177,7 @@ namespace MemoryMatchingGame
                     AddScore(5);
                     AddHealth(_playerHealthRejuvenationPoint);
 
-                    SoundHelper.PlaySound(SoundType.CORRECT_MATCH);
+                    SoundHelper.PlaySound(SoundType.TILE_MATCH);
 
                     tile1.MatchTile();
                     tile2.MatchTile();
@@ -188,7 +188,7 @@ namespace MemoryMatchingGame
                 }
                 else
                 {
-                    SoundHelper.PlaySound(SoundType.INCORRECT_MATCH);
+                    SoundHelper.PlaySound(SoundType.TILE_INCORRECT_MATCH);
 
 #if DEBUG
                     Console.WriteLine("TILES DON'T MATCH");

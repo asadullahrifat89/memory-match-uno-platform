@@ -50,7 +50,6 @@
     <_Globbed_Content Remove="Assets\Images\logo_game.png" />
     <_Globbed_Content Remove="Assets\Images\powerup2.png" />
     <_Globbed_Content Remove="Assets\localization.json" />
-    <_Globbed_Content Remove="Assets\Sounds\incorrect_match.mp3" />
     <_Globbed_Content Remove="Assets\Sounds\menu-select.mp3" />
     <_Globbed_Content Remove="Assets\Sounds\power-down.mp3" />
     <_Globbed_Content Remove="Assets\Sounds\power-up.mp3" />

@@ -67,8 +67,8 @@
         POWER_UP,
         POWER_DOWN,
         TILE_FLIP,
-        CORRECT_MATCH,
-        INCORRECT_MATCH,
+        TILE_MATCH,
+        TILE_INCORRECT_MATCH,
         LEVEL_UP,
         SELECTION_BARRED,
     }
