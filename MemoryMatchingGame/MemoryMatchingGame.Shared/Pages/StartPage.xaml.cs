@@ -399,9 +399,9 @@ namespace MemoryMatchingGame
 
         private void UpdateCard(GameObject Card)
         {
-            Card.SetTop(Card.GetTop() + _gameSpeed);
+            Card.SetLeft(Card.GetLeft() + _gameSpeed);
 
-            if (Card.GetTop() > UnderView.Height)
+            if (Card.GetLeft() > UnderView.Width)
             {
                 RecyleCard(Card);
             }
@@ -417,8 +417,8 @@ namespace MemoryMatchingGame
         private void RandomizeCardPosition(GameObject Card)
         {
             Card.SetPosition(
-                left: _random.Next(0, (int)UnderView.Width) - (100 * _scale),
-                top: _random.Next(100 * (int)_scale, (int)UnderView.Height) * -1);
+                left: _random.Next(0, (int)UnderView.Width) * -1,
+                top: _random.Next(0, (int)UnderView.Height));
         }
 
         #endregion
