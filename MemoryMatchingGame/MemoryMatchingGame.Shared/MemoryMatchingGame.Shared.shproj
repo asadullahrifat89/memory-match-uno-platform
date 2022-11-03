@@ -9,56 +9,5 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.Common.props" />
   <PropertyGroup />
   <Import Project="MemoryMatchingGame.Shared.projitems" Label="Shared" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\GameOverPage.xaml" />
-    <UpToDateCheckInput Remove="Pages\LeaderboardPage.xaml" />
-    <UpToDateCheckInput Remove="Pages\LoginPage.xaml" />
-    <UpToDateCheckInput Remove="Pages\SignUpPage.xaml" />
-    <UpToDateCheckInput Remove="Pages\StartPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <_Globbed_Compile Remove="Constants.cs" />
-    <_Globbed_Compile Remove="Elements\GameEnvironment.cs" />
-    <_Globbed_Compile Remove="Elements\GameObject.cs" />
-    <_Globbed_Compile Remove="Elements\Sound.cs" />
-    <_Globbed_Compile Remove="Extensions\HttpServiceExtensions.cs" />
-    <_Globbed_Compile Remove="Extensions\PageExtensions.cs" />
-    <_Globbed_Compile Remove="Extensions\StringExtensions.cs" />
-    <_Globbed_Compile Remove="Helpers\AssetHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\AuthTokenHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\CacheHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\CookieHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\GameProfileHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\LocalizationHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\PlayerCredentialsHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\PlayerScoreHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\ScalingHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\SessionHelper.cs" />
-    <_Globbed_Compile Remove="Helpers\SoundHelper.cs" />
-    <_Globbed_Compile Remove="Pages\GameOverPage.xaml.cs" />
-    <_Globbed_Compile Remove="Pages\LeaderboardPage.xaml.cs" />
-    <_Globbed_Compile Remove="Pages\LoginPage.xaml.cs" />
-    <_Globbed_Compile Remove="Pages\SignUpPage.xaml.cs" />
-    <_Globbed_Compile Remove="Pages\StartPage.xaml.cs" />
-    <_Globbed_Compile Remove="Peripherals\AudioPlayer.cs" />
-    <_Globbed_Compile Remove="Peripherals\LocalizationKey.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <_Globbed_Content Remove="Assets\Images\collectible6.png" />
-    <_Globbed_Content Remove="Assets\Images\logo_brand.png" />
-    <_Globbed_Content Remove="Assets\Images\logo_game.png" />
-    <_Globbed_Content Remove="Assets\Images\powerup2.png" />
-    <_Globbed_Content Remove="Assets\localization.json" />
-    <_Globbed_Content Remove="Assets\Sounds\menu-select.mp3" />
-    <_Globbed_Content Remove="Assets\Sounds\power-down.mp3" />
-    <_Globbed_Content Remove="Assets\Sounds\power-up.mp3" />
-  </ItemGroup>
-  <ItemGroup>
-    <_Globbled_Page Remove="Pages\GameOverPage.xaml" />
-    <_Globbled_Page Remove="Pages\LeaderboardPage.xaml" />
-    <_Globbled_Page Remove="Pages\LoginPage.xaml" />
-    <_Globbled_Page Remove="Pages\SignUpPage.xaml" />
-    <_Globbled_Page Remove="Pages\StartPage.xaml" />
-  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" /> 
 </Project>

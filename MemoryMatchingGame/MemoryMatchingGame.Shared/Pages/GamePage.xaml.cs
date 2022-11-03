@@ -595,9 +595,9 @@ namespace MemoryMatchingGame
         {
             _playerHealth = _playerHealthDefault;
 
-            _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.1 * _difficultyMultiplier;
+            _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.2 * _difficultyMultiplier;
             _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
-            _revealTilesCounterPoint = _revealTilesCounterDefault + 2 * _difficultyMultiplier;
+            _revealTilesCounterPoint = _revealTilesCounterDefault + 5 * _difficultyMultiplier;
 
             _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
 
