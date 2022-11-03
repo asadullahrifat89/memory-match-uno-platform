@@ -38,17 +38,10 @@ namespace MemoryMatchingGame
 
         private PowerUpType _powerUpType;
 
-        private int _cardPeekCounter;
-        private readonly int _cardPeekCounterDefault = 50;
-
-        private int _initialPeekCounter;
-        private readonly int _initialPeekCounterDefault = 100;
-
         private int _powerModeDurationCounter;
         private readonly int _powerModeDuration = 1000;
 
         private double _score;
-        private double _scoreCap;
         private double _difficultyMultiplier;
 
         private double _playerHealth;
@@ -68,6 +61,9 @@ namespace MemoryMatchingGame
         private int _memoryTilePairsCount;
 
         private ObservableCollection<MemoryTile> _createdMemoryTiles = new ObservableCollection<MemoryTile>();
+
+        private MemoryTile _selectedTile1;
+        private MemoryTile _selectedTile2;
 
         #endregion
 
@@ -127,8 +123,38 @@ namespace MemoryMatchingGame
             {
                 App.EnterFullScreen(true);
 
-                InputView.Focus(FocusState.Programmatic);
+                InputView.Visibility = Visibility.Collapsed;
                 StartGame();
+            }
+        }
+
+        private void MemoryTile_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            MemoryTile memoryTile = sender as MemoryTile;
+
+            if (_selectedTile1 == null)
+            {
+                _selectedTile1 = memoryTile;
+            }
+            else if (_selectedTile2 == null)
+            {
+                _selectedTile2 = memoryTile;
+            }
+
+            memoryTile.RevealTile();
+
+            if (_selectedTile1.Id == _selectedTile2.Id)
+            {
+                _selectedTile1.MatchTile();
+                _selectedTile2.MatchTile();
+
+                SoundHelper.PlaySound(SoundType.CORRECT_MATCH);
+
+                AddScore(5);
+            }
+            else
+            {
+                SoundHelper.PlaySound(SoundType.TILE_FLIP);
             }
         }
 
@@ -199,6 +225,8 @@ namespace MemoryMatchingGame
                     memoryTile.SetTop((memoryTile.Height + 5) * i);
                     memoryTile.SetLeft((memoryTile.Width + 5) * j);
 
+                    memoryTile.PointerPressed += MemoryTile_PointerPressed;
+
                     GameView.Children.Add(memoryTile);
 
                     tileNum++;
@@ -219,10 +247,10 @@ namespace MemoryMatchingGame
                 _markNum = _tileStart + i;
 
                 var memoryTile = new MemoryTile(_scale) { Id = i };
-                memoryTile.SetContent(_memoryTiles[_markNum]);
+                memoryTile.SetTileContent(_memoryTiles[_markNum]);
 
                 var memoryTileMatch = new MemoryTile(_scale) { Id = i };
-                memoryTileMatch.SetContent(_memoryTiles[_markNum]);
+                memoryTileMatch.SetTileContent(_memoryTiles[_markNum]);
 
                 _createdMemoryTiles.Add(memoryTile);
                 _createdMemoryTiles.Add(memoryTileMatch);
@@ -257,10 +285,8 @@ namespace MemoryMatchingGame
             _isPowerMode = false;
 
             _powerModeDurationCounter = _powerModeDuration;
-            _initialPeekCounter = _initialPeekCounterDefault;
 
             _score = 0;
-            _scoreCap = 50;
             _difficultyMultiplier = 1;
 
             _collectibleCollected = 0;
@@ -273,11 +299,7 @@ namespace MemoryMatchingGame
             PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
 
             StartGameSounds();
-
-            CreateMemoryTiles();
-            ShuffleMemoryTiles();
-            SetMemoryTiles();
-            SetViewSizeFromTiles();
+            SpawnMemoryTiles();
 
             RunGame();
 #if DEBUG
@@ -301,9 +323,15 @@ namespace MemoryMatchingGame
             PlayerHealthBar.Value = _playerHealth;
 
             DepleteHealth();
+            UpdateGameObjects();
+            RemoveGameObjects();
 
-            //UpdateGameObjects();
-            //RemoveGameObjects();
+            // once all the tiles are matched move to next level and start game
+            if (GameView.GetGameObjects<GameObject>().Count() == 0)
+            {
+                ScaleDifficulty();
+                SpawnMemoryTiles();
+            }
 
             //if (_isPowerMode)
             //{
@@ -358,6 +386,37 @@ namespace MemoryMatchingGame
 
         #endregion
 
+        #region GameObject
+
+        private void UpdateGameObjects()
+        {
+            foreach (GameObject x in GameView.GetGameObjects<GameObject>())
+            {
+                switch ((ElementType)x.Tag)
+                {
+                    case ElementType.MEMORYTILE:
+                        {
+                            UpdateMemoryTile(x as MemoryTile);
+                        }
+                        break;
+                    case ElementType.POWERUP:
+                        {
+
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void RemoveGameObjects()
+        {
+            GameView.RemoveDestroyableGameObjects();
+        }
+
+        #endregion
+
         #region Health
 
         private void AddHealth(double health)
@@ -400,6 +459,26 @@ namespace MemoryMatchingGame
 
         #endregion
 
+        #region MemoryTile
+
+        private void SpawnMemoryTiles()
+        {
+            CreateMemoryTiles();
+            ShuffleMemoryTiles();
+            SetMemoryTiles();
+            SetViewSizeFromTiles();
+        }
+
+        private void UpdateMemoryTile(MemoryTile memoryTile)
+        {
+            memoryTile.AnimateTile();
+
+            if (memoryTile.HasShrinked)
+                GameView.AddDestroyableGameObject(memoryTile);
+        }
+
+        #endregion
+
         #endregion
 
         #region Score
@@ -415,28 +494,25 @@ namespace MemoryMatchingGame
 
         private void ScaleDifficulty()
         {
-            if (_score > _scoreCap)
-            {
-                _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.1 * _difficultyMultiplier;
-                _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
-                _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
 
-                _difficultyMultiplier++;
-                _scoreCap += 50;
+            _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.1 * _difficultyMultiplier;
+            _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
+            _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
 
-                // increase columns up to 4
-                if (_columns < 4)
-                    _columns++;
+            _difficultyMultiplier++;
 
-                // increase rows upto 5
-                if (_columns == 4 && _rows < 5)
-                    _rows++;
+            // increase columns up to 4
+            if (_columns < 4)
+                _columns++;
+
+            // increase rows upto 5
+            if (_columns == 4 && _rows < 5)
+                _rows++;
 
 #if DEBUG
-                Console.WriteLine($"GAME SPEED: {_gameSpeed}");
-                Console.WriteLine($"SCORE CAP: {_scoreCap}");
+            Console.WriteLine($"GAME SPEED: {_gameSpeed}");
 #endif
-            }
+
         }
 
         #endregion

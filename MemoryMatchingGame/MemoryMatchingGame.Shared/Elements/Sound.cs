@@ -66,7 +66,7 @@
         GAME_OVER,
         POWER_UP,
         POWER_DOWN,
-        CARD_FLIP,
+        TILE_FLIP,
         CORRECT_MATCH,
         INCORRECT_MATCH,
     }

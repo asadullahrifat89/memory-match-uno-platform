@@ -40,8 +40,8 @@ namespace MemoryMatchingGame
             Child = _content;
             CanDrag = false;
 
-            _content.RenderTransformOrigin = new Point(0.5, 0.5);
-            _content.RenderTransform = _compositeTransform;
+            RenderTransformOrigin = new Point(0.5, 0.5);
+            RenderTransform = _compositeTransform;
         }
 
         #endregion        
