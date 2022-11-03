@@ -80,7 +80,7 @@ namespace MemoryMatchingGame
             _windowWidth = Window.Current.Bounds.Width;
 
             LoadGameElements();
-            PopulateGameViews();
+            SetGameView();
 
             Loaded += GamePage_Loaded;
             Unloaded += GamePage_Unloaded;
@@ -163,7 +163,10 @@ namespace MemoryMatchingGame
                 if (tile1.Id == tile2.Id && tile1.Number != tile2.Number)
                 {
                     _collectibleCollected++;
+                    
                     AddScore(5);
+                    AddHealth(_playerHealthRejuvenationPoint);
+
                     SoundHelper.PlaySound(SoundType.CORRECT_MATCH);
 
                     tile1.MatchTile();
@@ -226,19 +229,19 @@ namespace MemoryMatchingGame
             _powerUps = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.POWERUP).Select(x => x.Value).ToArray();
         }
 
-        private void PopulateGameViews()
+        private void SetGameView()
         {
 #if DEBUG
             Console.WriteLine("INITIALIZING GAME");
 #endif
             SetViewSize();
-            PopulateGameView();
+            SetRowsAndColumns();
         }
 
-        private void PopulateGameView()
+        private void SetRowsAndColumns()
         {
             _rows = 2;
-            _columns = 4;
+            _columns = 2;
         }
 
         private void StartGame()
