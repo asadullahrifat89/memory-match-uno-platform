@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -32,7 +33,7 @@ namespace MemoryMatchingGame
         private double _windowHeight, _windowWidth;
         private double _scale;
 
-        private Uri[] _cards;
+        private Uri[] _memoryTiles;
         private Uri[] _powerUps;
 
         private PowerUpType _powerUpType;
@@ -64,9 +65,9 @@ namespace MemoryMatchingGame
 
         private int _rows = 2;
         private int _columns = 2;
-        private int _tileSetCount;
+        private int _memoryTilePairsCount;
 
-        private ObservableCollection<MemoryTile> _memoryTiles = new ObservableCollection<MemoryTile>();
+        private ObservableCollection<MemoryTile> _createdMemoryTiles = new ObservableCollection<MemoryTile>();
 
         #endregion
 
@@ -75,11 +76,63 @@ namespace MemoryMatchingGame
         public GamePage()
         {
             this.InitializeComponent();
+
+            _isGameOver = true;
+            ShowInGameTextMessage("TAP_ON_SCREEN_TO_BEGIN");
+
+            _windowHeight = Window.Current.Bounds.Height;
+            _windowWidth = Window.Current.Bounds.Width;
+
+            LoadGameElements();
+            PopulateGameViews();
+
+            Loaded += GamePage_Loaded;
+            Unloaded += GamePage_Unloaded;
         }
 
         #endregion
 
         #region Events
+
+        #region Page
+
+        private void GamePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            SizeChanged += GamePage_SizeChanged;
+        }
+
+        private void GamePage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            SizeChanged -= GamePage_SizeChanged;
+            StopGame();
+        }
+
+        private void GamePage_SizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            _windowWidth = args.NewSize.Width;
+            _windowHeight = args.NewSize.Height;
+
+            SetViewSize();
+
+            Console.WriteLine($"WINDOWS SIZE: {_windowWidth}x{_windowHeight}");
+        }
+
+        #endregion
+
+        #region Input
+
+        private void InputView_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (_isGameOver)
+            {
+                App.EnterFullScreen(true);
+
+                InputView.Focus(FocusState.Programmatic);
+                StartGame();
+            }
+        }
+
+        #endregion
 
         #region Button
 
@@ -110,7 +163,7 @@ namespace MemoryMatchingGame
 
         private void LoadGameElements()
         {
-            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
+            _memoryTiles = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
             _powerUps = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.POWERUP).Select(x => x.Value).ToArray();
         }
 
@@ -128,14 +181,66 @@ namespace MemoryMatchingGame
             //TODO: add cards to container
 
             _rows = 2;
-            _columns = 2;
+            _columns = 4;
+        }
 
-            _tileSetCount = (_rows * _columns) / 2;
+        private void SetMemoryTiles()
+        {
+            GameView.Children.Clear();
 
-            _memoryTiles.Clear();
+            int tileNum = 0;
 
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _columns; j++)
+                {
+                    MemoryTile memoryTile = _createdMemoryTiles[tileNum];
 
+                    memoryTile.SetTop((memoryTile.Height + 5) * i);
+                    memoryTile.SetLeft((memoryTile.Width + 5) * j);
 
+                    GameView.Children.Add(memoryTile);
+
+                    tileNum++;
+                }
+            }
+        }
+
+        private void CreateMemoryTiles()
+        {
+            _memoryTilePairsCount = (_rows * _columns) / 2;
+
+            _createdMemoryTiles.Clear();
+
+            var _tileStart = _random.Next(0, _memoryTiles.Length / 2);
+
+            for (int i = 0; i < _memoryTilePairsCount; i++)
+            {
+                _markNum = _tileStart + i;
+
+                var memoryTile = new MemoryTile(_scale) { Id = i };
+                memoryTile.SetContent(_memoryTiles[_markNum]);
+
+                var memoryTileMatch = new MemoryTile(_scale) { Id = i };
+                memoryTileMatch.SetContent(_memoryTiles[_markNum]);
+
+                _createdMemoryTiles.Add(memoryTile);
+                _createdMemoryTiles.Add(memoryTileMatch);
+            }
+
+#if DEBUG
+            Console.WriteLine(_createdMemoryTiles);
+#endif
+        }
+
+        private void ShuffleMemoryTiles()
+        {
+            //Shuffle memory tiles
+            for (int i = 0; i < 64; i++)
+            {
+                _createdMemoryTiles.Reverse();
+                _createdMemoryTiles.Move(_random.Next(0, _createdMemoryTiles.Count), _random.Next(0, _createdMemoryTiles.Count));
+            }
         }
 
         private void StartGame()
@@ -168,6 +273,11 @@ namespace MemoryMatchingGame
             PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
 
             StartGameSounds();
+
+            CreateMemoryTiles();
+            ShuffleMemoryTiles();
+            SetMemoryTiles();
+            SetViewSizeFromTiles();
 
             RunGame();
 #if DEBUG
@@ -297,7 +407,6 @@ namespace MemoryMatchingGame
         private void AddScore(double score)
         {
             _score += score;
-            ScaleDifficulty();
         }
 
         #endregion
@@ -357,9 +466,25 @@ namespace MemoryMatchingGame
         private void SetViewSize()
         {
             _scale = ScalingHelper.GetGameObjectScale(_windowWidth);
+
+            if (_createdMemoryTiles.Count > 0 && !_isGameOver)
+            {
+                SetViewSizeFromTiles();
+            }
+            else
+            {
+                GameView.Width = _windowWidth <= 400 ? 300 : _windowWidth / 3;
+                GameView.Height = _windowHeight < 700 ? 600 : _windowHeight / 1.5;
+            }
 #if DEBUG
             Console.WriteLine($"SCALE: {_scale}");
 #endif
+        }
+
+        private void SetViewSizeFromTiles()
+        {
+            GameView.Height = (_columns * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
+            GameView.Width = (_rows * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
         }
 
         private void NavigateToPage(Type pageType)

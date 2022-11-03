@@ -13,8 +13,8 @@ namespace MemoryMatchingGame
         {
             Tag = ElementType.MEMORYTILE;
 
-            Height = Constants.CARD_SIZE * scale;
-            Width = Constants.CARD_SIZE * scale;
+            Height = Constants.TILE_SIZE * scale;
+            Width = Constants.TILE_SIZE * scale;
 
             Style = App.Current.Resources["CardStyle"] as Style;
         }
@@ -24,6 +24,8 @@ namespace MemoryMatchingGame
         #region Properties
 
         public int Id { get; set; }
+
+        public bool IsViewing { get; set; }
 
         #endregion
     }

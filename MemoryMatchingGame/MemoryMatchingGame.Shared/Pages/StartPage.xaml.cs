@@ -25,7 +25,7 @@ namespace MemoryMatchingGame
 
         private int _markNum;
 
-        private Uri[] _cards;
+        private Uri[] _MemoryTiles;
 
         private readonly IBackendService _backendService;
 
@@ -310,7 +310,7 @@ namespace MemoryMatchingGame
 
         private void LoadGameElements()
         {
-            _cards = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
+            _MemoryTiles = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
         }
 
         private void PopulateUnderView()
@@ -318,7 +318,7 @@ namespace MemoryMatchingGame
             // add some clouds underneath
             for (int i = 0; i < 10; i++)
             {
-                SpawnCard();
+                SpawnMemoryTile();
             }
         }
 
@@ -339,7 +339,7 @@ namespace MemoryMatchingGame
                 {
                     case ElementType.MEMORYTILE:
                         {
-                            RecyleCard(x);
+                            RecyleMemoryTile(x);
                         }
                         break;
                     default:
@@ -371,7 +371,7 @@ namespace MemoryMatchingGame
                 {
                     case ElementType.MEMORYTILE:
                         {
-                            UpdateCard(x);
+                            UpdateMemoryTile(x);
                         }
                         break;
                     default:
@@ -387,34 +387,33 @@ namespace MemoryMatchingGame
 
         #endregion
 
-        #region Card
+        #region MemoryTile
 
-        private void SpawnCard()
+        private void SpawnMemoryTile()
         {
-            MemoryTile Card = new(_scale);
-            RandomizeCardPosition(Card);
-
-            UnderView.Children.Add(Card);
+            MemoryTile mmoryTile = new(_scale);
+            RandomizeMemoryTilePosition(mmoryTile);
+            UnderView.Children.Add(mmoryTile);
         }
 
-        private void UpdateCard(GameObject Card)
+        private void UpdateMemoryTile(GameObject memoryTile)
         {
-            Card.SetLeft(Card.GetLeft() + _gameSpeed);
+            memoryTile.SetLeft(memoryTile.GetLeft() + _gameSpeed);
 
-            if (Card.GetLeft() > UnderView.Width)
-                RecyleCard(Card);
+            if (memoryTile.GetLeft() > UnderView.Width)
+                RecyleMemoryTile(memoryTile);
         }
 
-        private void RecyleCard(GameObject Card)
+        private void RecyleMemoryTile(GameObject memoryTile)
         {
-            _markNum = _random.Next(0, _cards.Length);
-            Card.SetContent(_cards[_markNum]);
-            RandomizeCardPosition(Card);
+            _markNum = _random.Next(0, _MemoryTiles.Length);
+            memoryTile.SetContent(_MemoryTiles[_markNum]);
+            RandomizeMemoryTilePosition(memoryTile);
         }
 
-        private void RandomizeCardPosition(GameObject Card)
+        private void RandomizeMemoryTilePosition(GameObject memoryTile)
         {
-            Card.SetPosition(
+            memoryTile.SetPosition(
                 left: _random.Next(0, (int)UnderView.Width) * -1,
                 top: _random.Next(0, (int)UnderView.Height));
         }

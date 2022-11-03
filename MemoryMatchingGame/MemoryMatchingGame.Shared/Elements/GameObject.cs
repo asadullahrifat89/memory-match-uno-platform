@@ -38,10 +38,10 @@ namespace MemoryMatchingGame
         public GameObject()
         {
             Child = _content;
-            RenderTransformOrigin = new Point(0.5, 0.5);
-
-            RenderTransform = _compositeTransform;
             CanDrag = false;
+
+            _content.RenderTransformOrigin = new Point(0.5, 0.5);
+            _content.RenderTransform = _compositeTransform;
         }
 
         #endregion        
