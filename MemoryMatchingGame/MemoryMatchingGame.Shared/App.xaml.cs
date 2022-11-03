@@ -111,9 +111,7 @@ namespace MemoryMatchingGame
 #endif
             {
                 if (rootFrame.Content == null)
-                    //TODO: start page navigate
-                    //rootFrame.Navigate(typeof(StartPage), args.Arguments);
-                    rootFrame.Navigate(typeof(GamePage), args.Arguments);
+                    rootFrame.Navigate(typeof(StartPage), args.Arguments);
 
                 _window.Activate();
             }

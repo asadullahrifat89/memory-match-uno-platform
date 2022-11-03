@@ -11,7 +11,11 @@
   <Import Project="MemoryMatchingGame.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
   <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\StartPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <_Globbed_Compile Remove="Constants.cs" />
+    <_Globbed_Compile Remove="Elements\Card.cs" />
     <_Globbed_Compile Remove="Elements\GameEnvironment.cs" />
     <_Globbed_Compile Remove="Elements\GameObject.cs" />
     <_Globbed_Compile Remove="Elements\Sound.cs" />
@@ -29,6 +33,7 @@
     <_Globbed_Compile Remove="Helpers\ScalingHelper.cs" />
     <_Globbed_Compile Remove="Helpers\SessionHelper.cs" />
     <_Globbed_Compile Remove="Helpers\SoundHelper.cs" />
+    <_Globbed_Compile Remove="Pages\StartPage.xaml.cs" />
     <_Globbed_Compile Remove="Peripherals\AudioPlayer.cs" />
     <_Globbed_Compile Remove="Peripherals\LocalizationKey.cs" />
   </ItemGroup>
@@ -44,5 +49,8 @@
     <_Globbed_Content Remove="Assets\Sounds\menu-select.mp3" />
     <_Globbed_Content Remove="Assets\Sounds\power-down.mp3" />
     <_Globbed_Content Remove="Assets\Sounds\power-up.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <_Globbled_Page Remove="Pages\StartPage.xaml" />
   </ItemGroup>
 </Project>

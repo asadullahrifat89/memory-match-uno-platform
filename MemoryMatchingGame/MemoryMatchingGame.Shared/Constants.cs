@@ -11,13 +11,8 @@ namespace MemoryMatchingGame
 
         public const double DEFAULT_FRAME_TIME = 18;
 
-        public const double PLAYER_SIZE = 80;
-        public const double PLAYER_TRAIL_SIZE = 80;
-
-        public const double COLLECTIBLE_SIZE = 70;
-        public const double POWERUP_SIZE = 80;
-
-        public const double ENEMY_SIZE = 100;
+        public const double CARD_SIZE = 70;
+        public const double POWERUP_SIZE = 70;
 
         #endregion
 

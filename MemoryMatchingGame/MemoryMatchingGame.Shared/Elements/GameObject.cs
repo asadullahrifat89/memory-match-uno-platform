@@ -21,8 +21,6 @@ namespace MemoryMatchingGame
             ScaleY = 1,
         };
 
-        //private Border _hitBoxborder;
-
         #endregion
 
         #region Properties
@@ -48,30 +46,6 @@ namespace MemoryMatchingGame
 
             RenderTransform = _compositeTransform;
             CanDrag = false;
-
-            #region HitBox Debug
-
-            //BorderThickness = new Microsoft.UI.Xaml.Thickness(1);
-            //BorderBrush = new SolidColorBrush(Colors.Black);
-
-            //_hitBoxborder = new Border()
-            //{
-            //    BorderThickness = new Microsoft.UI.Xaml.Thickness(1),
-            //    BorderBrush = new SolidColorBrush(Colors.Black)
-            //};
-
-
-            //var grid = new Grid()
-            //{
-            //    HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center,
-            //    VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center
-            //};
-
-            //grid.Children.Add(_hitBoxborder);
-            //grid.Children.Add(_content);
-            //Child = grid;
-
-            #endregion
         }
 
         #endregion        
@@ -124,12 +98,6 @@ namespace MemoryMatchingGame
         public void HideContent()
         {
             _content.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-        }
-
-        public void SetHitBoxBorder(Rect rect)
-        {
-            //_hitBoxborder.Height = rect.Height;
-            //_hitBoxborder.Width = rect.Width;
         }
 
         public void SetScaleTransform(double scaleTransform)
