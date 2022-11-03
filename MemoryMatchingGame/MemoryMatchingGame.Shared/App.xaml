@@ -71,7 +71,7 @@
             <!--#region Game UI Container Style-->
             <Style x:Key="GameUIContainer" TargetType="Border">
                 <Setter Property="Background" Value="#ffffff" />
-                <Setter Property="BorderBrush" Value="#8bc221" />
+                <Setter Property="BorderBrush" Value="#3e8113" />
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="BorderThickness" Value="0,3,0,3" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
