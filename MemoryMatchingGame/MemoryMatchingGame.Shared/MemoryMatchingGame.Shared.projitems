@@ -118,7 +118,11 @@
 	-->
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card16.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card17.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card18.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card19.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card2.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card20.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card3.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card4.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card5.png" />

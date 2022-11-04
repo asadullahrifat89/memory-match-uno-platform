@@ -123,17 +123,6 @@ namespace MemoryMatchingGame
 
         #region Input
 
-        private void InputView_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            if (_isGameOver)
-            {
-                App.EnterFullScreen(true);
-
-                InputView.Visibility = Visibility.Collapsed;
-                StartGame();
-            }
-        }
-
         private void MemoryTile_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (!_canSelect)
@@ -202,6 +191,17 @@ namespace MemoryMatchingGame
             else
             {
                 SoundHelper.PlaySound(SoundType.TILE_FLIP);
+            }
+        }
+
+        private void InputView_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (_isGameOver)
+            {
+                App.EnterFullScreen(true);
+
+                InputView.Visibility = Visibility.Collapsed;
+                StartGame();
             }
         }
 
@@ -610,20 +610,25 @@ namespace MemoryMatchingGame
 
             _difficultyMultiplier++;
 
-            // increase columns up to 4
+            if (_columns == 4 && _rows < 4)
+                _rows++;
+
             if (_columns < 4)
                 _columns++;
 
-            // increase rows upto 6
-            if (_columns == 4 && _rows < 6)
-                _rows++;
+            if (_columns == 4 && _rows == 4)
+                _columns++;
+
+            //if (_columns < 4)
+            //    _columns++;
+
+            //if (_columns == 4 && _rows < 6)
+            //    _rows++;
 
             SoundHelper.PlaySound(SoundType.LEVEL_UP);
-
 #if DEBUG
             Console.WriteLine($"GAME SPEED: {_gameSpeed}");
 #endif
-
         }
 
         #endregion
