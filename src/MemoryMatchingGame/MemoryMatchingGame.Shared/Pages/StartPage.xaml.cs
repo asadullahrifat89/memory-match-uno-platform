@@ -113,8 +113,7 @@ namespace MemoryMatchingGame
 
         private void HowToPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: HowToPlayPage
-            //NavigateToPage(typeof(HowToPlayPage));
+            NavigateToPage(typeof(HowToPlayPage));
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
