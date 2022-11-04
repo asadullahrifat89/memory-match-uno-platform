@@ -156,7 +156,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\menu-select.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\power-down.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\power-up.mp3" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\level_up.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\cards_spawn.mp3" />
     <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

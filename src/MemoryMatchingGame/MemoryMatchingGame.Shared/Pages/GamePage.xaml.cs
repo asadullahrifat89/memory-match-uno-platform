@@ -473,7 +473,7 @@ namespace MemoryMatchingGame
 
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
-            SoundHelper.PlaySound(SoundType.SPAWN_TILES);
+            SoundHelper.PlaySound(SoundType.TILES_SPAWN);
             RevealMemoryTiles();
         }
 
