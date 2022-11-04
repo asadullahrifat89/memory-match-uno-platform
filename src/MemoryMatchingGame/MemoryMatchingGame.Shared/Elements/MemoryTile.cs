@@ -54,9 +54,13 @@ namespace MemoryMatchingGame
 
         public int Number { get; set; } = 0;
 
+        public bool HasMatched { get; set; }
+
         public bool IsRevealed { get; set; }
 
-        public bool HasMatched { get; set; }
+        public bool IsPowerUpTile { get; set; }
+
+        public PowerUpType PowerUpType { get; set; }
 
         #endregion
 
@@ -124,7 +128,7 @@ namespace MemoryMatchingGame
 
     public enum PowerUpType
     {
-        TimeLapse,
+        TimeFreeze,
         ScoreMultiplier,
     }
 }

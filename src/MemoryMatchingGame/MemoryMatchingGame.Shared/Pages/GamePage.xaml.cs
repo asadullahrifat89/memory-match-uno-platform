@@ -21,16 +21,13 @@ namespace MemoryMatchingGame
         private readonly Random _random = new();
         private int _markNum;
 
-        private double _gameSpeed;
-        private readonly double _gameSpeedDefault = 5;
-
         private bool _isGameOver;
         private bool _isPowerMode;
 
         private double _windowHeight, _windowWidth;
         private double _scale;
 
-        private Uri[] _memoryTiles;
+        private Uri[] _tiles;
         private Uri[] _powerUps;
 
         private PowerUpType _powerUpType;
@@ -69,7 +66,7 @@ namespace MemoryMatchingGame
         private bool _isRevealMode;
         private double _revealTilesCounter;
         private double _revealTilesCounterPoint;
-        private readonly int _revealTilesCounterDefault = 250;
+        private readonly int _revealTilesCounterDefault = 300;
 
         #endregion
 
@@ -161,9 +158,12 @@ namespace MemoryMatchingGame
                 Console.WriteLine($"MATCHING TILES: {tile1.Id}, {tile1.Number} & {tile2.Id}, {tile2.Number}");
 #endif
 
-                if (tile1.Id == tile2.Id && tile1.Number != tile2.Number)
+                if (DoTilesMatch(tile1, tile2))
                 {
-                    _collectibleCollected++;
+                    if (tile1.IsPowerUpTile)
+                        PowerUp(tile1);
+                    else
+                        _collectibleCollected++;
 
                     AddScore(5);
                     AddHealth(_playerHealthRejuvenationPoint);
@@ -172,7 +172,6 @@ namespace MemoryMatchingGame
 
                     tile1.MatchMemoryTile();
                     tile2.MatchMemoryTile();
-
 #if DEBUG
                     Console.WriteLine("TILES MATCH");
 #endif
@@ -236,7 +235,7 @@ namespace MemoryMatchingGame
 
         private void LoadGameElements()
         {
-            _memoryTiles = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
+            _tiles = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.MEMORYTILE).Select(x => x.Value).ToArray();
             _powerUps = Constants.ELEMENT_TEMPLATES.Where(x => x.Key == ElementType.POWERUP).Select(x => x.Value).ToArray();
         }
 
@@ -263,8 +262,6 @@ namespace MemoryMatchingGame
             HideInGameTextMessage();
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
 
-            _gameSpeed = _gameSpeedDefault * _scale;
-
             _isGameOver = false;
             _isPowerMode = false;
 
@@ -288,9 +285,6 @@ namespace MemoryMatchingGame
             SpawnTiles();
 
             RunGame();
-#if DEBUG
-            Console.WriteLine($"GAME SPEED: {_gameSpeed}");
-#endif
         }
 
         private async void RunGame()
@@ -340,12 +334,12 @@ namespace MemoryMatchingGame
                         _canSelect = false;
                 }
 
-                //if (_isPowerMode)
-                //{
-                //    PowerUpCoolDown();
-                //    if (_powerModeDurationCounter <= 0)
-                //        PowerDown();
-                //}
+                if (_isPowerMode)
+                {
+                    PowerUpCoolDown();
+                    if (_powerModeDurationCounter <= 0)
+                        PowerDown();
+                }
             }
         }
 
@@ -518,26 +512,44 @@ namespace MemoryMatchingGame
 
             _createdMemoryTiles.Clear();
 
-            var _tileStart = _random.Next(0, _memoryTiles.Length / 2);
+            var _tileStart = _random.Next(0, _tiles.Length / 2);
 
             for (int i = 0; i < _memoryTilePairsCount; i++)
             {
                 _markNum = _tileStart + i;
 
                 var id = Guid.NewGuid().ToString();
+                var uri = _tiles[_markNum];
 
-                var memoryTile = new MemoryTile(_scale) { Id = id };
-                memoryTile.SetMemoryTileContent(_memoryTiles[_markNum]);
+                MemoryTile memoryTile = new(_scale) { Id = id };
+                memoryTile.SetMemoryTileContent(uri);
 
-                var memoryTileMatch = new MemoryTile(_scale) { Id = id };
-                memoryTileMatch.SetMemoryTileContent(_memoryTiles[_markNum]);
+                MemoryTile memoryTileMatch = new(_scale) { Id = id };
+                memoryTileMatch.SetMemoryTileContent(uri);
 
                 _createdMemoryTiles.Add(memoryTile);
                 _createdMemoryTiles.Add(memoryTileMatch);
             }
 
+            // switch out a random tile with a random power up
+            if (HasReachedFinalGridSize() || ShouldReachFinalGridSize())
+            {
+                _markNum = _random.Next(0, Enum.GetNames<PowerUpType>().Length);
+                var powerUpType = (PowerUpType)_markNum;
+                var uri = _powerUps[_markNum];
+
+                MemoryTile powerUpTile = _createdMemoryTiles[_random.Next(0, _createdMemoryTiles.Count)];
+                powerUpTile.SetMemoryTileContent(uri);
+                powerUpTile.IsPowerUpTile = true;
+                powerUpTile.PowerUpType = powerUpType;
+
+                MemoryTile powerUpTileMatch = _createdMemoryTiles.FirstOrDefault(x => x.Id == powerUpTile.Id);
+                powerUpTileMatch.SetMemoryTileContent(uri);
+                powerUpTileMatch.IsPowerUpTile = true;
+                powerUpTileMatch.PowerUpType = powerUpType;
+            }
 #if DEBUG
-            Console.WriteLine(_createdMemoryTiles);
+            Console.WriteLine("CREATED TILES COUNT:" + _createdMemoryTiles.Count);
 #endif
         }
 
@@ -583,7 +595,44 @@ namespace MemoryMatchingGame
             GameView.Width = (_columns * Constants.TILE_SIZE * _scale) + ((2.5 * _scale) * _createdMemoryTiles.Count);
         }
 
+        private static bool DoTilesMatch(MemoryTile tile1, MemoryTile tile2)
+        {
+            return tile1.Id == tile2.Id && tile1.Number != tile2.Number;
+        }
+
         #endregion
+
+        private void PowerUp(MemoryTile powerUp)
+        {
+            _isPowerMode = true;
+            _powerUpType = powerUp.PowerUpType;
+
+            _powerModeDurationCounter = _powerModeDuration;
+
+            powerUpText.Visibility = Visibility.Visible;
+            SoundHelper.PlaySound(SoundType.POWER_UP);
+        }
+
+        private void PowerUpCoolDown()
+        {
+            _powerModeDurationCounter -= 1;
+            double remainingPow = (double)_powerModeDurationCounter / (double)_powerModeDuration * 4;
+
+            powerUpText.Text = "";
+
+            for (int i = 0; i < remainingPow; i++)
+            {
+                powerUpText.Text += "⚡";
+            }
+        }
+
+        private void PowerDown()
+        {
+            _isPowerMode = false;
+
+            powerUpText.Visibility = Visibility.Collapsed;
+            SoundHelper.PlaySound(SoundType.POWER_DOWN);
+        }
 
         #endregion
 
@@ -602,13 +651,16 @@ namespace MemoryMatchingGame
         {
             _playerHealth = _playerHealthDefault;
 
-            _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.2 * _difficultyMultiplier;
-            _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
-            _revealTilesCounterPoint = _revealTilesCounterDefault + (5 * _difficultyMultiplier);
+            // upon reaching the final grid size increase depletion rate
 
-            _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
+            if (HasReachedFinalGridSize())
+            {
+                _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.2 * _difficultyMultiplier;
+                _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
+                _revealTilesCounterPoint = _revealTilesCounterDefault + (5 * _difficultyMultiplier);
 
-            _difficultyMultiplier++;
+                _difficultyMultiplier++;
+            }
 
             if (_columns == 4 && _rows < 4)
                 _rows++;
@@ -616,7 +668,7 @@ namespace MemoryMatchingGame
             if (_columns < 4)
                 _columns++;
 
-            if (_columns == 4 && _rows == 4)
+            if (ShouldReachFinalGridSize())
                 _columns++;
 
             //if (_columns < 4)
@@ -627,8 +679,18 @@ namespace MemoryMatchingGame
 
             SoundHelper.PlaySound(SoundType.LEVEL_UP);
 #if DEBUG
-            Console.WriteLine($"GAME SPEED: {_gameSpeed}");
+            Console.WriteLine($"ROW x COLUMN: {_rows}x{_columns}");
 #endif
+        }
+
+        private bool ShouldReachFinalGridSize()
+        {
+            return _rows == 4 && _columns == 4;
+        }
+
+        private bool HasReachedFinalGridSize()
+        {
+            return _rows == 4 && _columns == 5;
         }
 
         #endregion
