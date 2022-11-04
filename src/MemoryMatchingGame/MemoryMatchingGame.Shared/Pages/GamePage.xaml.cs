@@ -21,9 +21,6 @@ namespace MemoryMatchingGame
         private readonly Random _random = new();
         private int _markNum;
 
-        private double _gameSpeed;
-        private readonly double _gameSpeedDefault = 5;
-
         private bool _isGameOver;
         private bool _isPowerMode;
 
@@ -69,7 +66,7 @@ namespace MemoryMatchingGame
         private bool _isRevealMode;
         private double _revealTilesCounter;
         private double _revealTilesCounterPoint;
-        private readonly int _revealTilesCounterDefault = 250;
+        private readonly int _revealTilesCounterDefault = 300;
 
         #endregion
 
@@ -263,8 +260,6 @@ namespace MemoryMatchingGame
             HideInGameTextMessage();
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
 
-            _gameSpeed = _gameSpeedDefault * _scale;
-
             _isGameOver = false;
             _isPowerMode = false;
 
@@ -288,9 +283,6 @@ namespace MemoryMatchingGame
             SpawnTiles();
 
             RunGame();
-#if DEBUG
-            Console.WriteLine($"GAME SPEED: {_gameSpeed}");
-#endif
         }
 
         private async void RunGame()
@@ -340,12 +332,12 @@ namespace MemoryMatchingGame
                         _canSelect = false;
                 }
 
-                //if (_isPowerMode)
-                //{
-                //    PowerUpCoolDown();
-                //    if (_powerModeDurationCounter <= 0)
-                //        PowerDown();
-                //}
+                if (_isPowerMode)
+                {
+                    //PowerUpCoolDown();
+                    //if (_powerModeDurationCounter <= 0)
+                    //    PowerDown();
+                }
             }
         }
 
@@ -602,13 +594,16 @@ namespace MemoryMatchingGame
         {
             _playerHealth = _playerHealthDefault;
 
-            _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.2 * _difficultyMultiplier;
-            _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
-            _revealTilesCounterPoint = _revealTilesCounterDefault + (5 * _difficultyMultiplier);
+            // upon reaching the final grid size increase depletion rate
 
-            _gameSpeed = _gameSpeedDefault + 0.2 * _difficultyMultiplier;
+            if (_rows == 4 && _columns == 5)
+            {
+                _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.2 * _difficultyMultiplier;
+                _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
+                _revealTilesCounterPoint = _revealTilesCounterDefault + (5 * _difficultyMultiplier);
 
-            _difficultyMultiplier++;
+                _difficultyMultiplier++;
+            }
 
             if (_columns == 4 && _rows < 4)
                 _rows++;
@@ -616,7 +611,7 @@ namespace MemoryMatchingGame
             if (_columns < 4)
                 _columns++;
 
-            if (_columns == 4 && _rows == 4)
+            if (_rows == 4 && _columns == 4)
                 _columns++;
 
             //if (_columns < 4)
@@ -627,7 +622,7 @@ namespace MemoryMatchingGame
 
             SoundHelper.PlaySound(SoundType.LEVEL_UP);
 #if DEBUG
-            Console.WriteLine($"GAME SPEED: {_gameSpeed}");
+            Console.WriteLine($"ROW x COLUMN: {_rows}x{_columns}");
 #endif
         }
 
