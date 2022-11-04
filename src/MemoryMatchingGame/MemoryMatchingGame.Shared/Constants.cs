@@ -71,7 +71,7 @@ namespace MemoryMatchingGame
             new KeyValuePair<SoundType, string>(SoundType.TILE_MATCH, "Assets/Sounds/card_match.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.TILE_INCORRECT_MATCH, "Assets/Sounds/card_not_match.mp3"),
 
-            new KeyValuePair<SoundType, string>(SoundType.LEVEL_UP, "Assets/Sounds/level_up.mp3"),
+            new KeyValuePair<SoundType, string>(SoundType.SPAWN_TILES, "Assets/Sounds/level_up.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.SELECTION_BARRED, "Assets/Sounds/selection_barred.mp3"),
         };
 

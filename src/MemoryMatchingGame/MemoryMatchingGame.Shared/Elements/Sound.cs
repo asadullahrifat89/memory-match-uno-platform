@@ -69,7 +69,7 @@
         TILE_FLIP,
         TILE_MATCH,
         TILE_INCORRECT_MATCH,
-        LEVEL_UP,
+        SPAWN_TILES,
         SELECTION_BARRED,
     }
 }
