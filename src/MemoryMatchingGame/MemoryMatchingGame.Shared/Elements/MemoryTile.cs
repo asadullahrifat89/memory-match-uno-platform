@@ -128,7 +128,7 @@ namespace MemoryMatchingGame
 
     public enum PowerUpType
     {
-        TimeFreeze,
         ScoreMultiplier,
+        TimeFreeze,
     }
 }

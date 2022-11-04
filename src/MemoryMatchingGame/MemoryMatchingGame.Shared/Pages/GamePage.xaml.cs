@@ -305,9 +305,15 @@ namespace MemoryMatchingGame
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
             if (_isRevealMode)
+            {
                 RevealMemoryTilesCoolDown();
+            }
             else
-                DepleteHealth();
+            {
+                // in time freeze mode the timer stays frozen
+                if (!_isPowerMode || _powerUpType != PowerUpType.TimeFreeze)
+                    DepleteHealth();
+            }
 
             UpdateGameObjects();
             RemoveGameObjects();
@@ -609,6 +615,12 @@ namespace MemoryMatchingGame
 
             _powerModeDurationCounter = _powerModeDuration;
 
+            if (_isPowerMode && _powerUpType == PowerUpType.TimeFreeze)
+            {
+                _playerHealthDepletionCounter = 10;
+                PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Gray);
+            }
+
             powerUpText.Visibility = Visibility.Visible;
             SoundHelper.PlaySound(SoundType.POWER_UP);
         }
@@ -640,6 +652,9 @@ namespace MemoryMatchingGame
 
         private void AddScore(double score)
         {
+            if (_isPowerMode && _powerUpType == PowerUpType.ScoreMultiplier)
+                score *= 2;
+
             _score += score;
         }
 
