@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using Uno.Extensions;
 
 namespace MemoryMatchingGame
 {
@@ -283,7 +284,6 @@ namespace MemoryMatchingGame
 
             StartGameSounds();
             SpawnTiles();
-
             RunGame();
         }
 
@@ -305,9 +305,15 @@ namespace MemoryMatchingGame
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
             if (_isRevealMode)
+            {
                 RevealMemoryTilesCoolDown();
+            }
             else
-                DepleteHealth();
+            {
+                // in time freeze mode the timer stays frozen
+                if (!_isPowerMode || _powerUpType != PowerUpType.TimeFreeze)
+                    DepleteHealth();
+            }
 
             UpdateGameObjects();
             RemoveGameObjects();
@@ -467,6 +473,7 @@ namespace MemoryMatchingGame
 
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
 
+            SoundHelper.PlaySound(SoundType.TILES_SPAWN);
             RevealMemoryTiles();
         }
 
@@ -531,22 +538,37 @@ namespace MemoryMatchingGame
                 _createdMemoryTiles.Add(memoryTileMatch);
             }
 
-            // switch out a random tile with a random power up
+            // if about to reach or already reached final grid size add a random power up
             if (HasReachedFinalGridSize() || ShouldReachFinalGridSize())
             {
+                // remove the last pair of tiles to replace it with a power up pair of tiles
+                var lastId = _createdMemoryTiles.Last().Id;
+                _createdMemoryTiles.Remove(x => x.Id == lastId);
+
                 _markNum = _random.Next(0, Enum.GetNames<PowerUpType>().Length);
                 var powerUpType = (PowerUpType)_markNum;
+
+                var id = Guid.NewGuid().ToString();
                 var uri = _powerUps[_markNum];
 
-                MemoryTile powerUpTile = _createdMemoryTiles[_random.Next(0, _createdMemoryTiles.Count)];
+                MemoryTile powerUpTile = new(_scale)
+                {
+                    Id = id,
+                    IsPowerUpTile = true,
+                    PowerUpType = powerUpType
+                };
                 powerUpTile.SetMemoryTileContent(uri);
-                powerUpTile.IsPowerUpTile = true;
-                powerUpTile.PowerUpType = powerUpType;
 
-                MemoryTile powerUpTileMatch = _createdMemoryTiles.FirstOrDefault(x => x.Id == powerUpTile.Id);
+                MemoryTile powerUpTileMatch = new(_scale)
+                {
+                    Id = id,
+                    IsPowerUpTile = true,
+                    PowerUpType = powerUpType
+                };
                 powerUpTileMatch.SetMemoryTileContent(uri);
-                powerUpTileMatch.IsPowerUpTile = true;
-                powerUpTileMatch.PowerUpType = powerUpType;
+
+                _createdMemoryTiles.Add(powerUpTile);
+                _createdMemoryTiles.Add(powerUpTileMatch);
             }
 #if DEBUG
             Console.WriteLine("CREATED TILES COUNT:" + _createdMemoryTiles.Count);
@@ -609,6 +631,12 @@ namespace MemoryMatchingGame
 
             _powerModeDurationCounter = _powerModeDuration;
 
+            if (_isPowerMode && _powerUpType == PowerUpType.TimeFreeze)
+            {
+                _playerHealthDepletionCounter = 10;
+                PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Gray);
+            }
+
             powerUpText.Visibility = Visibility.Visible;
             SoundHelper.PlaySound(SoundType.POWER_UP);
         }
@@ -640,6 +668,9 @@ namespace MemoryMatchingGame
 
         private void AddScore(double score)
         {
+            if (_isPowerMode && _powerUpType == PowerUpType.ScoreMultiplier)
+                score *= 2;
+
             _score += score;
         }
 
@@ -652,7 +683,6 @@ namespace MemoryMatchingGame
             _playerHealth = _playerHealthDefault;
 
             // upon reaching the final grid size increase depletion rate
-
             if (HasReachedFinalGridSize())
             {
                 _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.2 * _difficultyMultiplier;
@@ -670,14 +700,6 @@ namespace MemoryMatchingGame
 
             if (ShouldReachFinalGridSize())
                 _columns++;
-
-            //if (_columns < 4)
-            //    _columns++;
-
-            //if (_columns == 4 && _rows < 6)
-            //    _rows++;
-
-            SoundHelper.PlaySound(SoundType.LEVEL_UP);
 #if DEBUG
             Console.WriteLine($"ROW x COLUMN: {_rows}x{_columns}");
 #endif
