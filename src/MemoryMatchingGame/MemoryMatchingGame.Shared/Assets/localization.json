@@ -293,15 +293,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Player"
+        "Value": "Tiles"
       },
       {
         "Culture": "de",
-        "Value": "Spieler"
+        "Value": "Kacheln"
       },
       {
         "Culture": "fr",
-        "Value": "Joueur"
+        "Value": "Carreaux"
       }
     ]
   },
@@ -310,15 +310,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Move the worm across the screen with your mouse pointer or your finger on the touchscreen and with it with food."
+        "Value": "Your goal is to match pairs of tiles as fast as you can."
       },
       {
         "Culture": "de",
-        "Value": "Bewegen Sie den Wurm mit dem Mauszeiger oder Ihrem Finger auf einem Touchscreen, um den Wurm zum Futter zu führen."
+        "Value": "Ihr Ziel ist es, so schnell wie möglich Paare von Spielsteinen zu finden."
       },
       {
         "Culture": "fr",
-        "Value": "Déplacez le ver avec le curseur de la souris ou votre doigt sur un écran touch pour guider le ver vers la mangeoire.."
+        "Value": "Votre objectif est de faire correspondre des paires de tuiles aussi vite que possible."
       }
     ]
   },
@@ -327,15 +327,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Lives"
+        "Value": "Timer"
       },
       {
         "Culture": "de",
-        "Value": "Leben"
+        "Value": "Zeitschaltuhr"
       },
       {
         "Culture": "fr",
-        "Value": "Vies"
+        "Value": "Minuterie"
       }
     ]
   },
@@ -344,86 +344,18 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "This is your live bar. It depletes with time and when it runs out its game over."
+        "Value": "This is your timer. It depletes slowly and when it runs out you lose. Matching a pair of tiles adds a little time to it."
       },
       {
         "Culture": "de",
-        "Value": "Dies ist Ihre Lebensleiste. Diese nimmt von Zeit zu Zeit mehr ab und wenn sie aufgebraucht ist, ist das Spiel vorbei."
+        "Value": "Dies ist dein Timer. Er verbraucht sich langsam und wenn er abläuft, hast du verloren. Wenn du ein Paar Kacheln zusammenbringst, verlängert sich die Zeit ein wenig."
       },
       {
         "Culture": "fr",
-        "Value": "Il s'agit de votre barre de vie. Elle diminue de temps en temps et lorsqu'elle est épuisée, le jeu est terminé.."
+        "Value": "C'est votre minuteur. Il s'épuise lentement et lorsqu'il est épuisé, vous perdez. Faire correspondre une paire de tuiles ajoute un peu de temps."
       }
     ]
-  },
-  {
-    "Key": "EnemiesInstructionsHeader",
-    "CultureValues": [
-      {
-        "Culture": "en",
-        "Value": "Enemies"
-      },
-      {
-        "Culture": "de",
-        "Value": "Feinde"
-      },
-      {
-        "Culture": "fr",
-        "Value": "Ennemis"
-      }
-    ]
-  },
-  {
-    "Key": "EnemiesInstructionsDetail",
-    "CultureValues": [
-      {
-        "Culture": "en",
-        "Value": "Avoid bumping into enemies and therefore loss of lives."
-      },
-      {
-        "Culture": "de",
-        "Value": "Vermeiden Sie es, mit Feinden zusammenzustossen und Leben zu verlieren."
-      },
-      {
-        "Culture": "fr",
-        "Value": "Évitez de vous heurter à des ennemis et de perdre des vies."
-      }
-    ]
-  },
-  {
-    "Key": "CollectiblesInstructionsHeader",
-    "CultureValues": [
-      {
-        "Culture": "en",
-        "Value": "Collectibles"
-      },
-      {
-        "Culture": "de",
-        "Value": "Sammelobjekte"
-      },
-      {
-        "Culture": "fr",
-        "Value": "Objects de collection"
-      }
-    ]
-  },
-  {
-    "Key": "CollectiblesInstructionsDetail",
-    "CultureValues": [
-      {
-        "Culture": "en",
-        "Value": "Collect these as many as possible to survive and earn points."
-      },
-      {
-        "Culture": "de",
-        "Value": "So oft wie möglich einsammeln, um zu überleben und Punkte zu sammeln."
-      },
-      {
-        "Culture": "fr",
-        "Value": "Ramasser le plus de fois possible pour survivre et gagner des points."
-      }
-    ]
-  },
+  },  
   {
     "Key": "PowerUpsInstructionsHeader",
     "CultureValues": [
@@ -446,15 +378,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Use these to pull collectibles like a magnet."
+        "Value": "Collect these to activate score multiplier or time freeze."
       },
       {
         "Culture": "de",
-        "Value": "Ziehen Sammelobjekte magnetisch an."
+        "Value": "Sammle sie ein, um den Punktemultiplikator oder das Einfrieren der Zeit zu aktivieren."
       },
       {
         "Culture": "fr",
-        "Value": "attirent magnétiquement les objets à collectionner."
+        "Value": "Collectez-les pour activer le multiplicateur de score ou le gel du temps."
       }
     ]
   },
