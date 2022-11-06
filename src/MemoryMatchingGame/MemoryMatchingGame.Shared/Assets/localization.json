@@ -72,15 +72,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Beat the high score and win the prize of the week!"
+        "Value": "A cute 😘 pair matching game on WebAssembly."
       },
       {
         "Culture": "de",
-        "Value": "Schlagt den High Score und gewinnt den Wochenpreis!"
+        "Value": "Ein niedliches 😘 Paarvergleichsspiel auf WebAssembly."
       },
       {
         "Culture": "fr",
-        "Value": "Battre le meilleure score et gagner le prix de la semaine!"
+        "Value": "Un joli jeu de correspondance de paires 😘 sur WebAssembly."
       }
     ]
   },
@@ -355,7 +355,7 @@
         "Value": "C'est votre minuteur. Il s'épuise lentement et lorsqu'il est épuisé, vous perdez. Faire correspondre une paire de tuiles ajoute un peu de temps."
       }
     ]
-  },  
+  },
   {
     "Key": "PowerUpsInstructionsHeader",
     "CultureValues": [
@@ -412,15 +412,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Log in to take part in the draw!"
+        "Value": "Log in, to have a chance to be at the top of the leaderboard."
       },
       {
         "Culture": "de",
-        "Value": "Loggen Sie sich ein, um an der Verlosung teilzunehmen."
+        "Value": "Melden Sie sich an, um die Chance zu haben, an der Spitze der Rangliste zu stehen."
       },
       {
         "Culture": "fr",
-        "Value": "Connectez-vous pour participer au tirage au sort."
+        "Value": "Connectez-vous, pour avoir une chance d'être en tête du classement."
       }
     ]
   },

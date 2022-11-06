@@ -88,11 +88,11 @@
 
                 <!--  Brand logo  -->
                 <HyperlinkButton
-                    Height="100"
+                    Height="45"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    NavigateUri="https://www.sv-restaurant.ch/de/">
-                    <Image Source="ms-appx:///Assets/Images/logo_brand.png" />
+                    NavigateUri="https://www.linkedin.com/in/asadullah-rifat/">
+                    Asadullah Rifat
                 </HyperlinkButton>
 
                 <!--  Message text  -->
