@@ -85,7 +85,7 @@
                     Orientation="Vertical">
 
                     <!--  Game over logo  -->
-                    <Image Height="80" Source="ms-appx:///Assets/Images/clock.png" />
+                    <Image Height="80" Source="ms-appx:///Assets/Images/powerup2.png" />
 
                     <!--  Tagline  -->
                     <TextBlock

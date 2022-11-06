@@ -42,7 +42,7 @@
                     Grid.Column="0"
                     Width="50"
                     Height="50"
-                    Source="ms-appx:///Assets/Images/clock.png" />
+                    Source="ms-appx:///Assets/Images/powerup2.png" />
 
                 <!--  Time bar  -->
                 <ProgressBar

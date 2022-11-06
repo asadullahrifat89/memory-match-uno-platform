@@ -33,8 +33,8 @@ namespace MemoryMatchingGame
 
         private PowerUpType _powerUpType;
 
-        private int _powerModeDurationCounter;
-        private readonly int _powerModeDuration = 1000;
+        private double _powerModeDurationCounter;
+        private readonly double _powerModeDuration = 1000;
 
         private double _score;
         private double _difficultyMultiplier;
@@ -45,10 +45,11 @@ namespace MemoryMatchingGame
         private int _collectibleCollected;
 
         private int _playerHealthDepletionCounter;
+        private readonly int _playerHealthDepletionCounterDefault = 10;
         private double _playerHealthDepletionPoint;
         private double _playerHealthRejuvenationPoint;
 
-        private readonly double _healthDepletePointDefault = 0.5;
+        private readonly double _healthDepletePointDefault = 0.4;
         private readonly double _healthGainPointDefault = 10;
 
         private int _rows = 2;
@@ -67,7 +68,7 @@ namespace MemoryMatchingGame
         private bool _isRevealMode;
         private double _revealTilesCounter;
         private double _revealTilesCounterPoint;
-        private readonly int _revealTilesCounterDefault = 300;
+        private readonly int _revealTilesCounterDefault = Constants.TILE_REVEAL_DURATION;
 
         #endregion
 
@@ -277,7 +278,7 @@ namespace MemoryMatchingGame
             _playerHealth = _playerHealthDefault;
             _playerHealthDepletionPoint = _healthDepletePointDefault;
             _playerHealthRejuvenationPoint = _healthGainPointDefault;
-            _playerHealthDepletionCounter = 10;
+            _playerHealthDepletionCounter = _playerHealthDepletionCounterDefault;
             _revealTilesCounterPoint = _revealTilesCounterDefault;
 
             PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Green);
@@ -437,7 +438,7 @@ namespace MemoryMatchingGame
             if (_playerHealthDepletionCounter <= 0)
             {
                 _playerHealth -= _playerHealthDepletionPoint;
-                _playerHealthDepletionCounter = 10;
+                _playerHealthDepletionCounter = _playerHealthDepletionCounterDefault;
             }
 
             if (_playerHealth < _playerHealthDefault / 3)
@@ -472,22 +473,21 @@ namespace MemoryMatchingGame
             SetViewSizeFromTiles();
 
             _memoryTilesInGame = GameView.GetGameObjects<MemoryTile>();
+            RevealMemoryTiles();
 
             SoundHelper.PlaySound(SoundType.TILES_SPAWN);
-            RevealMemoryTiles();
         }
 
-        private void RevealMemoryTiles()
+        private void RevealMemoryTiles(bool doubleTime = false)
         {
-            foreach (var tile in _memoryTilesInGame)
-            {
-                tile.RevealMemoryTile();
-            }
-
             _canSelect = false;
             _isRevealMode = true;
-            _revealTilesCounter = _revealTilesCounterPoint;
+            _revealTilesCounter = doubleTime ? _revealTilesCounterPoint * 2 : _revealTilesCounterPoint;
 
+            foreach (var tile in _memoryTilesInGame)
+            {
+                tile.RevealMemoryTile(_revealTilesCounter);
+            }
         }
 
         private void RevealMemoryTilesCoolDown()
@@ -545,6 +545,7 @@ namespace MemoryMatchingGame
                 var lastId = _createdMemoryTiles.Last().Id;
                 _createdMemoryTiles.Remove(x => x.Id == lastId);
 
+                //TODO: always set it to random
                 _markNum = _random.Next(0, Enum.GetNames<PowerUpType>().Length);
                 var powerUpType = (PowerUpType)_markNum;
 
@@ -633,10 +634,25 @@ namespace MemoryMatchingGame
 
             _powerModeDurationCounter = _powerModeDuration;
 
-            if (_isPowerMode && _powerUpType == PowerUpType.TimeFreeze)
+            switch (_powerUpType)
             {
-                _playerHealthDepletionCounter = 10;
-                PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Gray);
+                case PowerUpType.ScoreMultiplier:
+                    break;
+                case PowerUpType.TimeFreeze:
+                    {
+                        _playerHealthDepletionCounter = _playerHealthDepletionCounterDefault;
+                        PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Gray);
+                        PlayerHealthBarPanel.BorderBrush = new SolidColorBrush(Colors.Gray);
+                    }
+                    break;
+                case PowerUpType.RevealTiles:
+                    {
+                        RevealMemoryTiles(true);
+                        _powerModeDurationCounter = _revealTilesCounter;
+                    }
+                    break;
+                default:
+                    break;
             }
 
             powerUpText.Visibility = Visibility.Visible;
@@ -660,9 +676,24 @@ namespace MemoryMatchingGame
         {
             _isPowerMode = false;
 
+            switch (_powerUpType)
+            {
+                case PowerUpType.ScoreMultiplier:
+                    break;
+                case PowerUpType.TimeFreeze:
+                    {
+                        PlayerHealthBarPanel.BorderBrush = App.Current.Resources["FrameBackgroundColor"] as SolidColorBrush;
+                    }
+                    break;
+                case PowerUpType.RevealTiles:
+                    break;
+                default:
+                    break;
+            }
+
             powerUpText.Visibility = Visibility.Collapsed;
             SoundHelper.PlaySound(SoundType.POWER_DOWN);
-        } 
+        }
 
         #endregion
 
@@ -687,11 +718,11 @@ namespace MemoryMatchingGame
             _playerHealth = _playerHealthDefault;
 
             // upon reaching the final grid size increase depletion rate
-            if (HasReachedFinalGridSize())
+            if (HasReachedFinalGridSize() || ShouldReachFinalGridSize())
             {
                 _playerHealthRejuvenationPoint = _healthGainPointDefault + 0.2 * _difficultyMultiplier;
                 _playerHealthDepletionPoint = _healthDepletePointDefault + 0.1 * _difficultyMultiplier;
-                _revealTilesCounterPoint = _revealTilesCounterDefault + (5 * _difficultyMultiplier);
+                _revealTilesCounterPoint = _revealTilesCounterDefault + (2 * _difficultyMultiplier);
 
                 _difficultyMultiplier++;
             }

@@ -14,6 +14,8 @@ namespace MemoryMatchingGame
         public const double TILE_SIZE = 110;
         public const double POWERUP_SIZE = 110;
 
+        public const int TILE_REVEAL_DURATION = 70;
+
         #endregion
 
         #region Images
@@ -44,6 +46,7 @@ namespace MemoryMatchingGame
 
             new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup1.png")),
             new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup2.png")),
+            new KeyValuePair<ElementType, Uri>(ElementType.POWERUP, new Uri("ms-appx:///Assets/Images/powerup3.png")),
         };
 
         #endregion
