@@ -48,7 +48,7 @@ namespace MemoryMatchingGame
         private double _playerHealthDepletionPoint;
         private double _playerHealthRejuvenationPoint;
 
-        private readonly double _healthDepletePointDefault = 0.2;
+        private readonly double _healthDepletePointDefault = 0.4;
         private readonly double _healthGainPointDefault = 10;
 
         private int _rows = 2;
@@ -632,11 +632,26 @@ namespace MemoryMatchingGame
 
             _powerModeDurationCounter = _powerModeDuration;
 
-            if (_isPowerMode && _powerUpType == PowerUpType.TimeFreeze)
+            switch (_powerUpType)
             {
-                _playerHealthDepletionCounter = 10;
-                PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Gray);
-                PlayerHealthBarPanel.BorderBrush = new SolidColorBrush(Colors.Gray);
+                case PowerUpType.ScoreMultiplier:
+                    break;
+                case PowerUpType.TimeFreeze:
+                    {
+                        _playerHealthDepletionCounter = 10;
+                        PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Gray);
+                        PlayerHealthBarPanel.BorderBrush = new SolidColorBrush(Colors.Gray);
+
+                        _powerModeDurationCounter = Constants.TILE_REVEAL_DURATION; // to match the reveal counter in memory tile class
+                    }
+                    break;
+                case PowerUpType.RevealTiles:
+                    {
+
+                    }
+                    break;
+                default:
+                    break;
             }
 
             powerUpText.Visibility = Visibility.Visible;
@@ -660,8 +675,20 @@ namespace MemoryMatchingGame
         {
             _isPowerMode = false;
 
-            if (_powerUpType == PowerUpType.TimeFreeze)
-                PlayerHealthBarPanel.BorderBrush = App.Current.Resources["FrameBackgroundColor"] as SolidColorBrush;
+            switch (_powerUpType)
+            {
+                case PowerUpType.ScoreMultiplier:
+                    break;
+                case PowerUpType.TimeFreeze:
+                    {
+                        PlayerHealthBarPanel.BorderBrush = App.Current.Resources["FrameBackgroundColor"] as SolidColorBrush;
+                    }
+                    break;
+                case PowerUpType.RevealTiles:
+                    break;
+                default:
+                    break;
+            }
 
             powerUpText.Visibility = Visibility.Collapsed;
             SoundHelper.PlaySound(SoundType.POWER_DOWN);

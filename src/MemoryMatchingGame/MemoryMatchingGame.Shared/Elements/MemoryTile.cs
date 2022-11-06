@@ -9,13 +9,13 @@ namespace MemoryMatchingGame
     {
         #region Fields
 
-        private GameObject _hiddenObject;
-        private GameObject _overlayObject;
+        private readonly GameObject _hiddenObject;
+        private readonly GameObject _overlayObject;
 
-        private Grid _content;
+        private readonly Grid _content;
 
         private int _revealTileCounter;
-        private readonly int _revealTileCounterDefault = 70;
+        private readonly int _revealTileCounterDefault = Constants.TILE_REVEAL_DURATION;
 
         private int _matchTileCounter;
         private readonly int _matchTileCounterDefault = 50;
@@ -130,5 +130,6 @@ namespace MemoryMatchingGame
     {
         ScoreMultiplier,
         TimeFreeze,
+        RevealTiles
     }
 }

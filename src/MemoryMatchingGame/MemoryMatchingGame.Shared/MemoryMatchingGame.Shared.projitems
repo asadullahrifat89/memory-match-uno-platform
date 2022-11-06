@@ -138,6 +138,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\car12.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card13.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card14.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup3.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup2.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\localization.json" />
