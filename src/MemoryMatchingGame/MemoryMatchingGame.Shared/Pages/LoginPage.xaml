@@ -34,7 +34,7 @@
                 Orientation="Vertical">
 
                 <!--  Game logo  -->
-                <Image Height="100" Source="ms-appx:///Assets/Images/clock.png" />
+                <Image Height="100" Source="ms-appx:///Assets/Images/powerup2.png" />
 
                 <!--  Game name  -->
                 <TextBlock

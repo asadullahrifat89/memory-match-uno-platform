@@ -487,7 +487,6 @@ namespace MemoryMatchingGame
             _canSelect = false;
             _isRevealMode = true;
             _revealTilesCounter = _revealTilesCounterPoint;
-
         }
 
         private void RevealMemoryTilesCoolDown()
