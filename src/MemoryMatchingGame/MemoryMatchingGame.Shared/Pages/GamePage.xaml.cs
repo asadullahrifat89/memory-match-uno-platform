@@ -624,6 +624,8 @@ namespace MemoryMatchingGame
 
         #endregion
 
+        #region PowerUp
+
         private void PowerUp(MemoryTile powerUp)
         {
             _isPowerMode = true;
@@ -660,7 +662,9 @@ namespace MemoryMatchingGame
 
             powerUpText.Visibility = Visibility.Collapsed;
             SoundHelper.PlaySound(SoundType.POWER_DOWN);
-        }
+        } 
+
+        #endregion
 
         #endregion
 
