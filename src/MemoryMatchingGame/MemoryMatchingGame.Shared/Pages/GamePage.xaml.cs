@@ -48,7 +48,7 @@ namespace MemoryMatchingGame
         private double _playerHealthDepletionPoint;
         private double _playerHealthRejuvenationPoint;
 
-        private readonly double _healthDepletePointDefault = 0.5;
+        private readonly double _healthDepletePointDefault = 0.2;
         private readonly double _healthGainPointDefault = 10;
 
         private int _rows = 2;
@@ -637,6 +637,7 @@ namespace MemoryMatchingGame
             {
                 _playerHealthDepletionCounter = 10;
                 PlayerHealthBar.Foreground = new SolidColorBrush(Colors.Gray);
+                PlayerHealthBarPanel.BorderBrush = new SolidColorBrush(Colors.Gray);
             }
 
             powerUpText.Visibility = Visibility.Visible;
@@ -660,9 +661,12 @@ namespace MemoryMatchingGame
         {
             _isPowerMode = false;
 
+            if (_powerUpType == PowerUpType.TimeFreeze)
+                PlayerHealthBarPanel.BorderBrush = App.Current.Resources["FrameBackgroundColor"] as SolidColorBrush;
+
             powerUpText.Visibility = Visibility.Collapsed;
             SoundHelper.PlaySound(SoundType.POWER_DOWN);
-        } 
+        }
 
         #endregion
 
