@@ -354,6 +354,8 @@ namespace MemoryMatchingGame
         {
             ShowInGameTextMessage("GAME_PAUSED");
 
+            GameView.Visibility = Visibility.Collapsed;
+
             _gameViewTimer?.Dispose();
 
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
@@ -363,6 +365,8 @@ namespace MemoryMatchingGame
         private void ResumeGame()
         {
             HideInGameTextMessage();
+
+            GameView.Visibility = Visibility.Visible;
 
             SoundHelper.PlaySound(SoundType.MENU_SELECT);
             SoundHelper.ResumeSound(SoundType.BACKGROUND);
