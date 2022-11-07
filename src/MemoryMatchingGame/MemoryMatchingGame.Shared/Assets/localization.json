@@ -378,15 +378,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Collect these to activate score multiplier or time freeze."
+        "Value": "Collect these to activate score multiplier, time freeze or reveal tiles for short period."
       },
       {
         "Culture": "de",
-        "Value": "Sammle sie ein, um den Punktemultiplikator oder das Einfrieren der Zeit zu aktivieren."
+        "Value": "Sammeln Sie diese ein, um den Punktemultiplikator zu aktivieren, die Zeit einzufrieren oder Spielsteine für kurze Zeit aufzudecken."
       },
       {
         "Culture": "fr",
-        "Value": "Collectez-les pour activer le multiplicateur de score ou le gel du temps."
+        "Value": "Collectez-les pour activer le multiplicateur de score, geler le temps ou révéler les tuiles pendant une courte période."
       }
     ]
   },
