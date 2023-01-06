@@ -4,15 +4,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Memory Match"
+        "Value": "SELISE Memory Match"
       },
       {
         "Culture": "de",
-        "Value": "Memory Match"
+        "Value": "SELISE Memory Match"
       },
       {
         "Culture": "fr",
-        "Value": "Memory Match"
+        "Value": "SELISE Memory Match"
       }
     ]
   },
@@ -72,15 +72,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "A cute 😘 pair matching game on WebAssembly."
+        "Value": "Beat the high score and win the prize of the week!"
       },
       {
         "Culture": "de",
-        "Value": "Ein niedliches 😘 Paarvergleichsspiel auf WebAssembly."
+        "Value": "Schlagt den High Score und gewinnt den Wochenpreis!"
       },
       {
         "Culture": "fr",
-        "Value": "Un joli jeu de correspondance de paires 😘 sur WebAssembly."
+        "Value": "Battre le meilleure score et gagner le prix de la semaine!"
       }
     ]
   },
@@ -412,15 +412,15 @@
     "CultureValues": [
       {
         "Culture": "en",
-        "Value": "Log in, to have a chance to be at the top of the leaderboard."
+        "Value": "Log in to take part in the draw!"
       },
       {
         "Culture": "de",
-        "Value": "Melden Sie sich an, um die Chance zu haben, an der Spitze der Rangliste zu stehen."
+        "Value": "Loggen Sie sich ein, um an der Verlosung teilzunehmen."
       },
       {
         "Culture": "fr",
-        "Value": "Connectez-vous, pour avoir une chance d'être en tête du classement."
+        "Value": "Connectez-vous pour participer au tirage au sort."
       }
     ]
   },
@@ -527,6 +527,23 @@
     ]
   },
   {
+    "Key": "UserCityBox",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "City"
+      },
+      {
+        "Culture": "de",
+        "Value": "Stadt"
+      },
+      {
+        "Culture": "fr",
+        "Value": "Ville"
+      }
+    ]
+  },
+  {
     "Key": "UserEmailBox",
     "CultureValues": [
       {
@@ -545,6 +562,23 @@
   },
   {
     "Key": "UserNameBox",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "Username"
+      },
+      {
+        "Culture": "de",
+        "Value": "Benutzername"
+      },
+      {
+        "Culture": "fr",
+        "Value": "Nom d'utilisateur"
+      }
+    ]
+  },
+  {
+    "Key": "UserNameEmailBox",
     "CultureValues": [
       {
         "Culture": "en",
@@ -1034,6 +1068,91 @@
       {
         "Culture": "fr",
         "Value": "JEU PAUSÉ"
+      }
+    ]
+  },
+  {
+    "Key": "SeasonToggle",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "💫 Season"
+      },
+      {
+        "Culture": "de",
+        "Value": "💫 Saison"
+      },
+      {
+        "Culture": "fr",
+        "Value": "💫 Saison"
+      }
+    ]
+  },
+  {
+    "Key": "DailyPrize_Tagline",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "🎁 Weekly prize 🎁"
+      },
+      {
+        "Culture": "de",
+        "Value": "🎁 Wöchentlicher Preis 🎁"
+      },
+      {
+        "Culture": "fr",
+        "Value": "🎁 Prix de la semaine 🎁"
+      }
+    ]
+  },
+  {
+    "Key": "ViewPrizeButton",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "🎁 View Prize 🎁"
+      },
+      {
+        "Culture": "de",
+        "Value": "🎁 Preis ansehen 🎁"
+      },
+      {
+        "Culture": "fr",
+        "Value": "🎁 Voir le prix 🎁"
+      }
+    ]
+  },
+  {
+    "Key": "TermsAndConditionsButton",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "Conditions of participation"
+      },
+      {
+        "Culture": "de",
+        "Value": "Teilnahmebedingungen"
+      },
+      {
+        "Culture": "fr",
+        "Value": "Conditions de participation"
+      }
+    ]
+  },
+  {
+    "Key": "LOGIN_PROMPT",
+    "CultureValues": [
+      {
+        "Culture": "en",
+        "Value": "Sign up for a chance to win."
+      },
+      {
+        "Culture": "de",
+        "Value": "Melde dich an, um eine Chance auf den Gewinn zu haben."
+      },
+      {
+        "Culture": "fr",
+        "Value": "Inscris-toi pour avoir une chance de gagner."
       }
     ]
   }

@@ -24,14 +24,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Elements\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Elements\Sound.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\HttpServiceExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ObjectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\PageExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\GameOverPage.xaml.cs">
-      <DependentUpon>GameOverPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\GamePage.xaml.cs">
-      <DependentUpon>GamePage.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\AppSettingsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CompanyHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\PopUpHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\Company.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\GamePrizeOfTheDay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Entities\Season.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\GamePlayResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\AssetHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\AuthTokenHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CacheHelper.cs" />
@@ -57,6 +59,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\QueryRecordResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\QueryRecordsResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Responses\ServiceResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\GameContentDialog.xaml.cs">
+      <DependentUpon>GameContentDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\HowToPlayPage.xaml.cs">
+      <DependentUpon>HowToPlayPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\GameOverPage.xaml.cs">
+      <DependentUpon>GameOverPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\GamePlayPage.xaml.cs">
+      <DependentUpon>GamePlayPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\LeaderboardPage.xaml.cs">
       <DependentUpon>LeaderboardPage.xaml</DependentUpon>
     </Compile>
@@ -79,11 +93,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Implementations\HttpService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\GameContentDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Pages\GameOverPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Pages\GamePage.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Pages\GamePlayPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\HowToPlayPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -111,11 +133,10 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <!--
-		 Add files present in the shared project folder, excluding the ones
+    <!-- Add files present in the shared project folder, excluding the ones
 		 explicitly included in the projitem, so files can be added from vscode
-		 without manipulating the projitem file.
-	-->
+		 without manipulating the projitem file. -->
+    <Content Include="$(MSBuildThisFileDirectory)appsettings.json" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card16.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card17.png" />
@@ -132,15 +153,16 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card9.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card10.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card15.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_brand.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card_overlay.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\logo_game.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card11.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\car12.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card13.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\card14.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup3.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup2.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup1.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Images\powerup3.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\localization.json" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\card_match.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Sounds\card_flip.mp3" />
@@ -160,14 +182,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </_Globbled_Page>
-    <Page Include="@(_Globbled_Page)">
-      <SubType>Designer</SubType>
-    </Page>
     <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.xaml.cs" Exclude="@(Compile)">
       <DependentUpon>%(Filename)</DependentUpon>
     </_Globbed_Compile>
     <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.cs" Exclude="@(Compile);@(_Globbed_Compile)" />
-    <Compile Include="@(_Globbed_Compile)" />
     <_Globbed_PRIResource Include="$(MSBuildThisFileDirectory)**/*.resw" Exclude="@(PRIResource)" />
     <PRIResource Include="@(_Globbed_PRIResource)" />
     <_Globbed_Content Include="$(MSBuildThisFileDirectory)Assets/**/*.*" Exclude="@(Content)" />
