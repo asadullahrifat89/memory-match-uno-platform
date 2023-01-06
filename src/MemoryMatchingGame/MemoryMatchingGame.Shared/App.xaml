@@ -27,9 +27,12 @@
                 <Setter Property="FontFamily" Value="Frutiger" />
             </Style>
 
-            <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+            <Style
+                x:Key="GameButtonStyle"
+                BasedOn="{StaticResource DefaultButtonStyle}"
+                TargetType="Button">
                 <Setter Property="Background" Value="#3e8113" />
-                <Setter Property="Foreground" Value="White" />
+                <Setter Property="Foreground" Value="#ffffff" />
                 <Setter Property="BorderBrush" Value="#9c9fa0" />
                 <Setter Property="BorderThickness" Value="3" />
                 <Setter Property="FontWeight" Value="SemiBold" />
@@ -39,6 +42,9 @@
                 <Setter Property="IsFocusEngagementEnabled" Value="False" />
                 <Setter Property="FontFamily" Value="Frutiger" />
             </Style>
+
+            <!--  Applying game button style globally  -->
+            <Style BasedOn="{StaticResource GameButtonStyle}" TargetType="Button" />
 
             <Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
                 <Setter Property="CornerRadius" Value="15" />
@@ -99,6 +105,8 @@
             <!--#endregion-->
 
             <!--#region Colors-->
+            <SolidColorBrush x:Key="LeaderboardRecordForegroundColor" Color="#ffffff" />
+
             <SolidColorBrush x:Key="SystemAccentColorLight2" Color="#3e8113" />
             <SolidColorBrush x:Key="SystemAccentColorDark1" Color="#3e8113" />
 

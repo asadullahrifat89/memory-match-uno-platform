@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace MemoryMatchingGame
 {
@@ -26,6 +28,8 @@ namespace MemoryMatchingGame
 
         private Uri[] _memoryTiles;
 
+        private readonly IBackendService _backendService;
+
         #endregion
 
         #region Ctor
@@ -33,6 +37,7 @@ namespace MemoryMatchingGame
         public HowToPlayPage()
         {
             this.InitializeComponent();
+            _backendService = (Application.Current as App).Host.Services.GetRequiredService<IBackendService>();
 
             _windowHeight = Window.Current.Bounds.Height;
             _windowWidth = Window.Current.Bounds.Width;
@@ -54,17 +59,17 @@ namespace MemoryMatchingGame
         {
             SetLocalization();
 
-            SizeChanged += GamePage_SizeChanged;
+            SizeChanged += GamePlayPage_SizeChanged;
             StartAnimation();
         }
 
         private void HowToPlayPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            SizeChanged -= GamePage_SizeChanged;
+            SizeChanged -= GamePlayPage_SizeChanged;
             StopAnimation();
         }
 
-        private void GamePage_SizeChanged(object sender, SizeChangedEventArgs args)
+        private void GamePlayPage_SizeChanged(object sender, SizeChangedEventArgs args)
         {
             _windowWidth = args.NewSize.Width;
             _windowHeight = args.NewSize.Height;
@@ -80,9 +85,10 @@ namespace MemoryMatchingGame
 
         #region Buttons
 
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(typeof(GamePage));
+            if (GameProfileHelper.HasUserLoggedIn() ? await GenerateSession() : true)
+                NavigateToPage(typeof(GamePlayPage));
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -120,6 +126,24 @@ namespace MemoryMatchingGame
 
         #region Methods
 
+        #region Logic
+
+        private async Task<bool> GenerateSession()
+        {
+            (bool IsSuccess, string Message) = await _backendService.GenerateUserSession();
+
+            if (!IsSuccess)
+            {
+                var error = Message;
+                this.ShowError(error);
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
         #region Page
 
         private void SetViewSize()
@@ -132,7 +156,7 @@ namespace MemoryMatchingGame
 
         private void NavigateToPage(Type pageType)
         {
-            if (pageType == typeof(GamePage))
+            if (pageType == typeof(GamePlayPage))
                 SoundHelper.StopSound(SoundType.INTRO);
 
             SoundHelper.PlaySound(SoundType.MENU_SELECT);

@@ -6,6 +6,7 @@ namespace MemoryMatchingGame
     public static class Constants
     {
         public const string GAME_ID = "memory-match";
+        public const string COMPANY_ID = "selise";
 
         #region Measurements
 
@@ -72,19 +73,11 @@ namespace MemoryMatchingGame
             new KeyValuePair<SoundType, string>(SoundType.TILES_SPAWN, "Assets/Sounds/cards_spawn.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.TILE_FLIP, "Assets/Sounds/card_flip.mp3"),
             new KeyValuePair<SoundType, string>(SoundType.TILE_MATCH, "Assets/Sounds/card_match.mp3"),
-            new KeyValuePair<SoundType, string>(SoundType.TILE_INCORRECT_MATCH, "Assets/Sounds/card_not_match.mp3"),            
+            new KeyValuePair<SoundType, string>(SoundType.TILE_INCORRECT_MATCH, "Assets/Sounds/card_not_match.mp3"),
 
             new KeyValuePair<SoundType, string>(SoundType.SELECTION_BARRED, "Assets/Sounds/selection_barred.mp3"),
         };
 
-        #endregion
-
-        #region Web Api Base Urls
-#if DEBUG
-        public const string GAME_API_BASEURL = "https://localhost:7238";
-#else
-        public const string GAME_API_BASEURL = "https://astro-odyssey-web-api.herokuapp.com";
-#endif
         #endregion
 
         #region Web Api Endpoints
@@ -95,20 +88,22 @@ namespace MemoryMatchingGame
         public const string Action_SignUp = "/api/Command/SignUp";
         public const string Action_SubmitGameScore = "/api/Command/SubmitGameScore";
         public const string Action_GenerateSession = "/api/Command/GenerateSession";
-        public const string Action_ValidateSession = "/api/Command/ValidateSession";
+        public const string Action_ValidateToken = "/api/Command/ValidateToken";
 
         public const string Action_GetGameProfile = "/api/Query/GetGameProfile";
         public const string Action_GetGameProfiles = "/api/Query/GetGameProfiles";
-        public const string Action_GetGameScores = "/api/Query/GetGameScores";
-        public const string Action_GetUser = "/api/Query/GetUser";
+        public const string Action_GetGameScoresOfTheDay = "/api/Query/GetGameScoresOfTheDay";
         public const string Action_CheckIdentityAvailability = "/api/Query/CheckIdentityAvailability";
+        public const string Action_GetSeason = "/api/Query/GetSeason";
+        public const string Action_GetGamePrizeOfTheDay = "/api/Query/GetGamePrizeOfTheDay";
+        public const string Action_GetCompany = "/api/Query/GetCompany";
 
         #endregion
 
         #region Session Keys
 
-        public const string CACHE_SESSION_KEY = "Session";
-        public const string CACHE_LANGUAGE_KEY = "Language";
+        public const string CACHE_REFRESH_TOKEN_KEY = "RT";
+        public const string CACHE_LANGUAGE_KEY = "Lang";
 
         #endregion
 

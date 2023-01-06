@@ -92,6 +92,7 @@ namespace MemoryMatchingGame
             _overlayObject.Opacity = 0;
         }
 
+
         public void RevealMemoryTile(double revealTileCounter)
         {
             IsRevealed = true;
